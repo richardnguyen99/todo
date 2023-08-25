@@ -9,9 +9,9 @@ components are divided into separate services. The project structure is as below
 
 ```bash
 .
-├── api     # API server
+├── tasks   # Tasks API service
 ├── app     # Web app
-├── auth    # Authentication server
+├── auth    # Authentication API server
 ├── gateway # API gateway
 ├── .editorconfig
 ├── .gitignore

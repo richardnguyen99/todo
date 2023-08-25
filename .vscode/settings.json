@@ -1,0 +1,14 @@
+{
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none",
+  "black-formatter.args": [
+    "--line-length",
+    "79",
+    "--skip-string-normalization"
+  ],
+  "flake8.args": [
+    "--per-file-ignores=*.py:F401"
+  ]
+}
