@@ -1,16 +1,54 @@
+import http from "http";
 import express from "express";
-import { graphqlHTTP } from "express-graphql";
+import cors from "cors";
+import bodyParser from "body-parser";
+import { ApolloServer } from "@apollo/server";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer"
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+
 
 import config from "./config";
-import schema from "./schema";
 
-const app = express();
+const schema = `#graphql
+  type Query {
+    hello: String
+  }
+`;
 
-app.use("/graphql", graphqlHTTP({
-  schema: schema,
-  rootValue: { hello: () => "Hello, World!" },
-  graphiql: config.env.development,
-}));
+const createExpressApp = async () => {
+
+  const app = express();
+  const httpServer = http.createServer(app);
+
+  const server = new ApolloServer({
+    typeDefs: schema,
+    resolvers: {
+      Query: {
+        hello: () => "Hello world!",
+      }
+    },
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer }),
+    (config.env.production) ? ApolloServerPluginLandingPageProductionDefault({
+      graphRef: "my-graph-id@my-graph-variant",
+      footer: false,
+    }) : ApolloServerPluginLandingPageLocalDefault()
+    ],
+  });
+
+  await server.start();
 
 
-export default app;
+  app.use(
+    cors(),
+    bodyParser.json(),
+    expressMiddleware(server)
+  );
+
+  return httpServer;
+};
+
+
+
+
+export default createExpressApp;
