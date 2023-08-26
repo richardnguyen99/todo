@@ -1,13 +1,15 @@
 import express from "express";
+import { graphqlHTTP } from "express-graphql";
+
+import schema from "./schema";
 
 const app = express();
 
-app.get("/", (_req, res) => {
-
-  res.status(200);
-  res.contentType("application/json");
-  res.json({ message: "Hello, World!", status: 200 });
-});
+app.use("/graphql", graphqlHTTP({
+  schema: schema,
+  rootValue: { hello: () => "Hello, World!" },
+  graphiql: true,
+}));
 
 
 export default app;
