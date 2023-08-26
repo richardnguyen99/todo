@@ -1,7 +1,11 @@
 import app from "./app";
 
-const server = app.listen(3000, () => {
-  console.log("Listening on port 3000");
+import config from "./config";
+
+const server = app.listen(config.port, () => {
+  const env = config.env.development ? "DEVELOPMENT" : "PRODUCTION";
+
+  console.log(`[${env}] Listening on port ${config.port}}`);
 });
 
 export default server;
