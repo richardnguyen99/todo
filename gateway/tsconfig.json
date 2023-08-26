@@ -1,4 +1,14 @@
 {
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "ts-node": {
+    "files": true
+  },
+  "files": [
+    "src/index.ts",
+    "src/@types/process.d.ts"
+  ],
   "compilerOptions": {
     "target": "ES5",
     "module": "commonjs",
@@ -6,6 +16,7 @@
       "ES2015",
       "DOM"
     ],
+    "moduleResolution": "node",
     "removeComments": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -31,6 +42,10 @@
     "noPropertyAccessFromIndexSignature": true,
     "allowUnusedLabels": true,
     "allowUnreachableCode": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],
     /* Visit https://aka.ms/tsconfig to read more about this file */
     /* Projects */
     // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */

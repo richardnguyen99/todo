@@ -1,7 +1,13 @@
-import app from "./app";
+import createExpressApp from "./app";
 
-const server = app.listen(3000, () => {
-  console.log("Listening on port 3000");
-});
+import config from "./config";
 
-export default server;
+(async () => {
+  const server = await createExpressApp();
+
+  // @ts-ignore
+  await new Promise(resolve => server.listen({ port: config.port }, resolve));
+
+  console.log(`🚀 Server ready at http://localhost:${config.port}`);
+})();
+
