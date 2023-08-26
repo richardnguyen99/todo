@@ -42,3 +42,7 @@ yarn.lock
 
 # Ignore environment files
 .*env
+
+# Ignore GraphQL generated files
+src/__generated__
+graphql.schema.json
