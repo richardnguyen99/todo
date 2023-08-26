@@ -3,5 +3,5 @@ import queries from "./queries";
 
 export default {
   queries,
-  mutations
+  mutations,
 };
