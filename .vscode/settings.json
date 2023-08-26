@@ -18,5 +18,8 @@
     },
     "editor.suggest.insertMode": "replace",
     "editor.wordWrap": "off",
-  }
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
 }
