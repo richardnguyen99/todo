@@ -5,12 +5,12 @@ import mock from "../mock";
 const user: QueryResolvers["user"] = async (
   _parent,
   _args,
-  _context,
+  _context = {},
   _info
 ) => {
   const { id } = _args;
 
-  const user = mock.find((user: any) => user.id === id);
+  const user = mock.find((user) => user.id === id);
 
   // Mock delay
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -28,7 +28,6 @@ const users: QueryResolvers["users"] = async (
   _context,
   _info
 ) => {
-
   // Mock delay
   await new Promise((resolve) => setTimeout(resolve, 2000));
 

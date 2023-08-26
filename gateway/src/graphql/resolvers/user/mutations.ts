@@ -11,36 +11,49 @@ const createUser: MutationResolvers["createUser"] = async (
   _info
 ) => {
   const { input } = _args;
+  const user = mock.find(
+    (user) => user.email === input.email && user.name === input.name
+  );
 
-  if (mock.find((user: any) => user.email === input.email && user.name === input.name)) {
+  if (!user) {
     throw new Error(`User already exists: ${input.name}`);
-  };
+  }
 
-  const user = { ...input, id: new ObjectId().toHexString() };
+  user.id = new ObjectId().toHexString();
 
   (mock as User[]).push(user);
 
   return user;
 };
 
-const updateUser = async (_: any, _args: any) => {
+const updateUser: MutationResolvers["updateUser"] = async (
+  _parent,
+  _args,
+  _context,
+  _info
+) => {
   const { id } = _args;
-  const user = mock.find((user: any) => user.id === id);
+  const user = mock.find((user) => user.id === id);
 
   if (!user) {
     throw new Error("User not found");
   }
 
-  const updatedUser = { ...user, ..._args.input };
+  const updatedUser: User = { ...user, ..._args.input } as User;
 
-  mock.splice(mock.indexOf(user), 1, updatedUser);
+  (mock as User[]).splice(mock.indexOf(user), 1, updatedUser);
 
   return updatedUser;
 };
 
-const deleteUser = async (_: any, _args: any) => {
+const deleteUser: MutationResolvers["deleteUser"] = async (
+  _parent,
+  _args,
+  _context,
+  _info
+) => {
   const { id } = _args;
-  const user = mock.find((user: any) => user.id === id);
+  const user = mock.find((user) => user.id === id);
 
   if (!user) {
     throw new Error(`User ID not found: ${id}`);
@@ -54,5 +67,5 @@ const deleteUser = async (_: any, _args: any) => {
 export default {
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };
