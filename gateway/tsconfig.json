@@ -17,6 +17,7 @@
       "DOM"
     ],
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "removeComments": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
