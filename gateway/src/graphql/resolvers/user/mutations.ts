@@ -1,8 +1,15 @@
 import { ObjectId } from "bson";
 
+import type { MutationResolvers, User } from "@generated/resolvers-types";
+
 import mock from "../mock";
 
-const createUser = async (_: any, _args: any) => {
+const createUser: MutationResolvers["createUser"] = async (
+  _parent,
+  _args,
+  _context,
+  _info
+) => {
   const { input } = _args;
 
   if (mock.find((user: any) => user.email === input.email && user.name === input.name)) {
@@ -11,7 +18,7 @@ const createUser = async (_: any, _args: any) => {
 
   const user = { ...input, id: new ObjectId().toHexString() };
 
-  mock.push(user);
+  (mock as User[]).push(user);
 
   return user;
 };
