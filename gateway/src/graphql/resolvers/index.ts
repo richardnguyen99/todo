@@ -4,7 +4,7 @@ export default {
   Query: {
     ...user.queries,
   },
-  // Mutation: {
-  // ...user.mutations,
-  // },
+  Mutation: {
+    ...user.mutations,
+  },
 }
