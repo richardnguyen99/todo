@@ -11,5 +11,12 @@
   "flake8.args": [
     "--per-file-ignores=*.py:F401"
   ],
-  "dotnet.defaultSolution": "auth/auth.sln"
+  "dotnet.defaultSolution": "auth/auth.sln",
+  "[jsonc]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.wordWrap": "off",
+  }
 }
