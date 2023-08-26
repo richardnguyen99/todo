@@ -10,5 +10,6 @@
   ],
   "flake8.args": [
     "--per-file-ignores=*.py:F401"
-  ]
+  ],
+  "dotnet.defaultSolution": "auth/auth.sln"
 }
