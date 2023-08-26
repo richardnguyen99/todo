@@ -9,12 +9,8 @@ import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPag
 
 
 import config from "./config";
-
-const schema = `#graphql
-  type Query {
-    hello: String
-  }
-`;
+import schema from "./graphql/schema";
+import rootResolver from "./graphql/resolvers";
 
 const createExpressApp = async () => {
 
@@ -23,11 +19,7 @@ const createExpressApp = async () => {
 
   const server = new ApolloServer({
     typeDefs: schema,
-    resolvers: {
-      Query: {
-        hello: () => "Hello world!",
-      }
-    },
+    resolvers: rootResolver,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer }),
     (config.env.production) ? ApolloServerPluginLandingPageProductionDefault({
       graphRef: "my-graph-id@my-graph-variant",
