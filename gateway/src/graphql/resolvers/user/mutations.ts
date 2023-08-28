@@ -1,8 +1,6 @@
-import { ObjectId } from "bson";
+import type { MutationResolvers } from "@generated/resolvers-types";
 
-import type { MutationResolvers, User } from "@generated/resolvers-types";
-
-import mock from "../mock";
+import services from "./services";
 
 const createUser: MutationResolvers["createUser"] = async (
   _parent,
@@ -11,17 +9,8 @@ const createUser: MutationResolvers["createUser"] = async (
   _info
 ) => {
   const { input } = _args;
-  const user = mock.find(
-    (user) => user.email === input.email && user.name === input.name
-  );
 
-  if (!user) {
-    throw new Error(`User already exists: ${input.name}`);
-  }
-
-  user.id = new ObjectId().toHexString();
-
-  (mock as User[]).push(user);
+  const user = await services.createUser(input);
 
   return user;
 };
@@ -33,15 +22,9 @@ const updateUser: MutationResolvers["updateUser"] = async (
   _info
 ) => {
   const { id } = _args;
-  const user = mock.find((user) => user.id === id);
+  const updateUserInput = _args.input;
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  const updatedUser: User = { ...user, ..._args.input } as User;
-
-  (mock as User[]).splice(mock.indexOf(user), 1, updatedUser);
+  const updatedUser = await services.updateUser(id, updateUserInput);
 
   return updatedUser;
 };
@@ -53,15 +36,10 @@ const deleteUser: MutationResolvers["deleteUser"] = async (
   _info
 ) => {
   const { id } = _args;
-  const user = mock.find((user) => user.id === id);
 
-  if (!user) {
-    throw new Error(`User ID not found: ${id}`);
-  }
+  const deletedUser = await services.deleteUser(id);
 
-  mock.splice(mock.indexOf(user), 1);
-
-  return user;
+  return deletedUser;
 };
 
 export default {
