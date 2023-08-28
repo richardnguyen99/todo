@@ -175,6 +175,90 @@ describe("mutation Users()", () => {
     );
   });
 
+  it("should delete a user on delete query", async () => {
+    const query = `#graphql
+      mutation MyDeleteUserMutation($deleteUserId: ID!) {
+        deleteUser(id: $deleteUserId) {
+          id
+          name
+          email
+          age
+          gender
+          phone
+          address
+          company
+          dob
+        }
+      }
+    `;
+
+    const oldLength = mock.length;
+    const res = await server.executeOperation<typeof mock>({
+      query,
+      variables: {
+        deleteUserId: "64ea5312a4b6e4e9e0b29f5c",
+      },
+    });
+
+    const user = mock.find((user) => user.id === "64ea5312a4b6e4e9e0b29f5c");
+
+    expect(res.body.kind).toEqual("single");
+    expect((res.body as any).singleResult.data).toBeTruthy();
+    expect((res.body as any).singleResult.data.deleteUser).toEqual({
+      id: "64ea5312a4b6e4e9e0b29f5c",
+      name: "Ratliff Tanner",
+      email: "ratlifftanner@enersave.com",
+      age: 23,
+      gender: "male",
+      phone: "+1 (936) 583-3633",
+      address: "413 Guernsey Street, Hayes, Colorado, 5576",
+      company: "Costco",
+      dob: "03-13-2015",
+    });
+
+    expect(user).toBeUndefined();
+    expect(mock.length).toEqual(oldLength - 1);
+  });
+
+  it("should not delete a user if not existing", async () => {
+    const query = `#graphql
+      mutation MyDeleteUserMutation($deleteUserId: ID!) {
+        deleteUser(id: $deleteUserId) {
+          id
+          name
+          email
+          age
+          gender
+          phone
+          address
+          company
+          dob
+        }
+      }
+    `;
+
+    const oldLength = mock.length;
+    const testUserId = "64ea5312a4b6e4e9e0b29f5cd";
+    const res = await server.executeOperation<typeof mock>({
+      query,
+      variables: {
+        deleteUserId: testUserId,
+      },
+    });
+
+    expect(res.body.kind).toEqual("single");
+
+    expect((res.body as any).singleResult.data).toBeNull();
+
+    expect(Array.isArray((res.body as any).singleResult.errors)).toBe(true);
+
+    expect((res.body as any).singleResult.errors[0].message).toEqual(
+      `User ID not found: ${testUserId}`
+    );
+
+    expect(mock.length).toEqual(oldLength);
+  });
+
   afterAll(() => {
     server.stop();
   });

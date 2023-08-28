@@ -1,10 +1,9 @@
 import dotenv from "dotenv";
 
-if (process.env.NODE_ENV !== "test") {
-  dotenv.config({
-    path: process.env.NODE_ENV === "development" ? ".dev.env" : ".prod.env",
-  });
-}
+dotenv.config({
+  path: process.env.NODE_ENV === "development" ? ".dev.env" : ".prod.env",
+  override: false,
+});
 
 const port = process.env.PORT || 3000;
 
