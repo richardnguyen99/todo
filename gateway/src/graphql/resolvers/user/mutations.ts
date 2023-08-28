@@ -37,15 +37,10 @@ const deleteUser: MutationResolvers["deleteUser"] = async (
   _info
 ) => {
   const { id } = _args;
-  const user = mock.find((user) => user.id === id);
 
-  if (!user) {
-    throw new Error(`User ID not found: ${id}`);
-  }
+  const deletedUser = await services.deleteUser(id);
 
-  mock.splice(mock.indexOf(user), 1);
-
-  return user;
+  return deletedUser;
 };
 
 export default {
