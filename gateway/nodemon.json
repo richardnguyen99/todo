@@ -4,6 +4,7 @@
   "exec": "npm start",
   "ext": "ts",
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "USE_MOCK": true
   }
 }

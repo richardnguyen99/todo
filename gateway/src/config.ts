@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 const env = {
   development: process.env.NODE_ENV === "development",
   production: process.env.NODE_ENV === "production",
+  testing: process.env.NODE_ENV === "testing",
 };
 
 export default { port, env };

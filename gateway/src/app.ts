@@ -34,7 +34,13 @@ const createExpressApp = async () => {
 
   await server.start();
 
-  app.use(cors(), bodyParser.json(), expressMiddleware(server));
+  app.use(
+    cors(),
+    bodyParser.json(),
+    expressMiddleware(server, {
+      context: async ({ req, res }) => ({ req, res }),
+    })
+  );
 
   return httpServer;
 };

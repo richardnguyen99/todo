@@ -1,7 +1,6 @@
-import { ObjectId } from "bson";
-
 import type { MutationResolvers, User } from "@generated/resolvers-types";
 
+import services from "./services";
 import mock from "../mock";
 
 const createUser: MutationResolvers["createUser"] = async (
@@ -11,17 +10,8 @@ const createUser: MutationResolvers["createUser"] = async (
   _info
 ) => {
   const { input } = _args;
-  const user = mock.find(
-    (user) => user.email === input.email && user.name === input.name
-  );
 
-  if (!user) {
-    throw new Error(`User already exists: ${input.name}`);
-  }
-
-  user.id = new ObjectId().toHexString();
-
-  (mock as User[]).push(user);
+  const user = await services.createUser(input);
 
   return user;
 };
