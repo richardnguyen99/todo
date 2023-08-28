@@ -1,7 +1,6 @@
 import type { MutationResolvers } from "@generated/resolvers-types";
 
 import services from "./services";
-import mock from "../mock";
 
 const createUser: MutationResolvers["createUser"] = async (
   _parent,

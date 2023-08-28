@@ -5,7 +5,7 @@ import mock from "../mock";
 const user: QueryResolvers["user"] = async (
   _parent,
   _args,
-  _context = {},
+  _context,
   _info
 ) => {
   const { id } = _args;
