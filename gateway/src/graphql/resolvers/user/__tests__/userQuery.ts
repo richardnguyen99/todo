@@ -4,8 +4,6 @@ import schema from "@graphql/schema";
 import rootResolver from "@graphql/resolvers";
 import mock from "@graphql/resolvers/mock";
 
-const sum = (a: number, b: number) => a + b;
-
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers: rootResolver,
@@ -14,10 +12,6 @@ const server = new ApolloServer({
 describe("query MyUserQuery()", () => {
   beforeAll(() => {
     server.start();
-  });
-
-  it("should return 3", () => {
-    expect(sum(1, 2)).toBe(3);
   });
 
   it("should return all users", async () => {
