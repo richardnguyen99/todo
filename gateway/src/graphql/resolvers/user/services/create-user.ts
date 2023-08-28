@@ -11,8 +11,6 @@ const _createUserMock = async (userEntity: CreateUserInput) => {
   const { name, email } = userEntity;
   const user = mock.find((user) => user.email === email && user.name === name);
 
-  console.log("user", user);
-
   if (typeof user !== "undefined") {
     throw new Error(`User already exists: ${name}`);
   }

@@ -1,4 +1,4 @@
-import type { MutationResolvers, User } from "@generated/resolvers-types";
+import type { MutationResolvers } from "@generated/resolvers-types";
 
 import services from "./services";
 import mock from "../mock";
@@ -23,15 +23,9 @@ const updateUser: MutationResolvers["updateUser"] = async (
   _info
 ) => {
   const { id } = _args;
-  const user = mock.find((user) => user.id === id);
+  const updateUserInput = _args.input;
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  const updatedUser: User = { ...user, ..._args.input } as User;
-
-  (mock as User[]).splice(mock.indexOf(user), 1, updatedUser);
+  const updatedUser = await services.updateUser(id, updateUserInput);
 
   return updatedUser;
 };
