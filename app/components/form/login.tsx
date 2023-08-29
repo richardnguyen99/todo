@@ -4,39 +4,29 @@ import * as React from "react";
 import { EyeIcon } from "@primer/octicons-react";
 
 import Input from "./input";
+import PasswordInput from "./password-input";
 
 const LoginForm: React.FC = () => {
   return (
     <form>
       <div className="mb-8">
-        <label className="block mb-2 text-sm font-bold text-gray-700">
+        <label
+          className="block mb-2 text-sm font-bold text-gray-700"
+          htmlFor="login-email-input"
+        >
           Email
         </label>
-        <input
-          className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-          id="email"
-          type="email"
-          placeholder="Email"
-        />
+        <Input id="login-email-input" type="email" placeholder="Email" />
       </div>
 
       <div className="mb-6">
-        <label className="block mb-2 text-sm font-bold text-gray-700">
+        <label
+          className="block mb-2 text-sm font-bold text-gray-700"
+          htmlFor="login-password-input"
+        >
           Password
         </label>
-        <div className="relative">
-          <Input
-            id="login-password-input"
-            initialValue=""
-            placeholder="Password"
-            onChangeCallback={() => {}}
-          />
-          <div className="absolute flex top-0 right-0 bottom-0 items-center">
-            <div className="mx-3">
-              <EyeIcon size={16} />
-            </div>
-          </div>
-        </div>
+        <PasswordInput />
       </div>
 
       {/* Remember me */}
