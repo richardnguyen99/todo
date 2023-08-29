@@ -1,6 +1,7 @@
 import * as React from "react";
 import clsx from "classnames";
-import Image from "next/image";
+
+import Form from "@components/form";
 
 const Home: React.FC = () => {
   return (
@@ -22,8 +23,10 @@ const Home: React.FC = () => {
               An experimental task tracking application
             </h3>
           </div>
+
           <div className="w-4/12">
             <h1>Login</h1>
+            <Form.Login />
           </div>
         </div>
       </section>
