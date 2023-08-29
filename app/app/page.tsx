@@ -25,8 +25,10 @@ const Home: React.FC = () => {
           </div>
 
           <div className="w-4/12">
-            <h1>Login</h1>
-            <Form.Login />
+            <div className="flex flex-col gap-12">
+              <h1 className="text-3xl font-bold">Login</h1>
+              <Form.Login />
+            </div>
           </div>
         </div>
       </section>
