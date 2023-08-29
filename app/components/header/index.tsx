@@ -1,6 +1,5 @@
 import * as React from "react";
 import clsx from "classnames";
-import Link from "next/link";
 import { MarkGithubIcon } from "@primer/octicons-react";
 import HeaderLink from "./link";
 
@@ -9,6 +8,7 @@ const Header: React.FC = () => {
     <header
       aria-description="header"
       className={clsx("", {
+        "fixed w-full": true,
         "shadow-lg drop-shadow-lg shadow-slate-300": true,
       })}
     >
@@ -36,6 +36,7 @@ const Header: React.FC = () => {
             <HeaderLink href="/login">Login</HeaderLink>
             <HeaderLink href="/register">Register</HeaderLink>
           </div>
+
           <div
             className={clsx("flex", {
               "ml-4 pl-4 border-l border-slate-300": true,
