@@ -15,75 +15,78 @@ type Props = React.PropsWithChildren<
   React.InputHTMLAttributes<HTMLInputElement> & InputProps
 >;
 
-const Input: React.FC<Props> = ({
-  initialValue = "",
-  showState = false,
-  className: _className,
-  onChangeCallback,
-  onValidateCallback,
-  onBlurCallback,
-  ...rest
-}) => {
-  const [state, setState] = React.useState(InputStateType.PRIMARY);
-  const [value, setValue] = React.useState(initialValue);
+const Input = React.forwardRef(
+  ({
+    initialValue = "",
+    showState = false,
+    className: _className,
+    onChangeCallback,
+    onValidateCallback,
+    onBlurCallback,
+    ...rest
+  }: Props) => {
+    const [state, setState] = React.useState(InputStateType.PRIMARY);
+    const [value, setValue] = React.useState(initialValue);
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
 
-    if (typeof onChangeCallback !== "function") return;
+      if (typeof onChangeCallback !== "function") return;
 
-    onChangeCallback(e.target.value);
-  };
+      onChangeCallback(e.target.value);
+    };
 
-  const updateStateOnValidation = () => {
-    if (typeof onValidateCallback !== "function") return;
+    const updateStateOnValidation = () => {
+      if (typeof onValidateCallback !== "function") return;
 
-    const isValid = onValidateCallback(value);
+      const isValid = onValidateCallback(value);
 
-    if (isValid) {
-      setState(InputStateType.SUCCESS);
-    } else {
-      setState(InputStateType.ERROR);
-    }
-  };
+      if (isValid) {
+        setState(InputStateType.SUCCESS);
+      } else {
+        setState(InputStateType.ERROR);
+      }
+    };
 
-  const blurHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (typeof onBlurCallback !== "function") return;
+    const blurHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (typeof onBlurCallback !== "function") return;
 
-    updateStateOnValidation();
+      updateStateOnValidation();
 
-    onBlurCallback(value);
-  };
+      onBlurCallback(value);
+    };
 
-  return (
-    <input
-      {...rest}
-      className={clsx("", {
-        "w-full px-3 py-2 leading-tight": true,
-        "rounded shadow-md appearance-none border": true,
-        "focus:outline-none focus:ring-2": true,
+    return (
+      <input
+        {...rest}
+        className={clsx("", {
+          "w-full px-3 py-2 leading-tight": true,
+          "rounded shadow-md appearance-none border": true,
+          "focus:outline-none focus:ring-2": true,
 
-        // Use box-shadow for bolder border since changing border might causes
-        // the layout to shift and glitch
-        "ring-gray-400": state === InputStateType.PRIMARY,
-        "text-gray-700 ": state === InputStateType.PRIMARY,
-        "hover:border-gray-400": state === InputStateType.PRIMARY,
-        "focus:border-gray-400": state === InputStateType.PRIMARY,
+          // Use box-shadow for bolder border since changing border might causes
+          // the layout to shift and glitch
+          "ring-gray-400": state === InputStateType.PRIMARY,
+          "text-gray-700 ": state === InputStateType.PRIMARY,
+          "hover:border-gray-400": state === InputStateType.PRIMARY,
+          "focus:border-gray-400": state === InputStateType.PRIMARY,
 
-        "ring-red-400": state === InputStateType.ERROR,
-        "text-red-700 ": state === InputStateType.ERROR,
-        "hover:border-red-400": state === InputStateType.ERROR,
-        "focus:border-red-400": state === InputStateType.ERROR,
+          "ring-red-400": state === InputStateType.ERROR,
+          "text-red-700 ": state === InputStateType.ERROR,
+          "hover:border-red-400": state === InputStateType.ERROR,
+          "focus:border-red-400": state === InputStateType.ERROR,
 
-        "ring-green-400": state === InputStateType.SUCCESS,
-        "text-green-700 ": state === InputStateType.SUCCESS,
-        "hover:border-green-400": state === InputStateType.SUCCESS,
-        "focus:border-green-400": state === InputStateType.SUCCESS,
-      })}
-      onChange={changeHandler}
-      onBlur={blurHandler}
-    />
-  );
-};
+          "ring-green-400": state === InputStateType.SUCCESS,
+          "text-green-700 ": state === InputStateType.SUCCESS,
+          "hover:border-green-400": state === InputStateType.SUCCESS,
+          "focus:border-green-400": state === InputStateType.SUCCESS,
+        })}
+        onChange={changeHandler}
+        onBlur={blurHandler}
+      />
+    );
+  }
+);
+Input.displayName = "Input";
 
 export default Input;
