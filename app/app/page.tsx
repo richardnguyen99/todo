@@ -34,7 +34,7 @@ const Home: React.FC = () => {
                 {loginForm ? "Login" : "Register"}
               </h1>
               <div>
-                <Form.Login />
+                {loginForm ? <Form.Login /> : <Form.Register />}
 
                 {/* Register if don't have account */}
                 <div className="mt-4">

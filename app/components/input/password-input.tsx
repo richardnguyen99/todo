@@ -1,7 +1,7 @@
 import * as React from "react";
 import { EyeIcon, EyeClosedIcon } from "@primer/octicons-react";
 
-import type { InputProps } from "./types";
+import type { InputProps } from "../form/types";
 import Input from "./input";
 
 type Props = React.PropsWithChildren<

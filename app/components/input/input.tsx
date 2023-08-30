@@ -2,7 +2,7 @@
 import * as React from "react";
 import clsx from "classnames";
 
-import type { InputProps } from "./types";
+import type { InputProps } from "../form/types";
 
 enum InputStateType {
   PRIMARY = 1,
