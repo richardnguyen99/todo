@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { EyeIcon } from "@primer/octicons-react";
 
 import Input from "./input";
 import PasswordInput from "./password-input";
+
+import Link from "@components/Link";
 
 const LoginForm: React.FC = () => {
   return (
@@ -47,7 +48,7 @@ const LoginForm: React.FC = () => {
       {/* Submit button */}
       <div className="flex items-center justify-between">
         <button
-          className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-sky-600 focus:outline-none focus:shadow-outline"
+          className="rounded-lg px-4 py-2 font-bold text-white bg-blue-500 hover:bg-sky-600 focus:outline-none focus:shadow-outline"
           type="button"
         >
           Sign In
