@@ -15,16 +15,19 @@ type Props = React.PropsWithChildren<
   React.InputHTMLAttributes<HTMLInputElement> & InputProps
 >;
 
-const Input = React.forwardRef(
-  ({
-    initialValue = "",
-    showState = false,
-    className: _className,
-    onChangeCallback,
-    onValidateCallback,
-    onBlurCallback,
-    ...rest
-  }: Props) => {
+const Input = React.forwardRef<HTMLInputElement, Props>(
+  (
+    {
+      initialValue = "",
+      showState = false,
+      className: _className,
+      onChangeCallback,
+      onValidateCallback,
+      onBlurCallback,
+      ...rest
+    },
+    ref
+  ) => {
     const [state, setState] = React.useState(InputStateType.PRIMARY);
     const [value, setValue] = React.useState(initialValue);
 
@@ -58,6 +61,7 @@ const Input = React.forwardRef(
 
     return (
       <input
+        ref={ref}
         {...rest}
         className={clsx("", {
           "w-full px-3 py-2 leading-tight": true,
@@ -81,8 +85,6 @@ const Input = React.forwardRef(
           "hover:border-green-400": state === InputStateType.SUCCESS,
           "focus:border-green-400": state === InputStateType.SUCCESS,
         })}
-        onChange={changeHandler}
-        onBlur={blurHandler}
       />
     );
   }
