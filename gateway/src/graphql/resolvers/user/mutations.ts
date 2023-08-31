@@ -42,8 +42,24 @@ const deleteUser: MutationResolvers["deleteUser"] = async (
   return deletedUser;
 };
 
+const login: MutationResolvers["login"] = async (
+  _parent,
+  _args,
+  _context,
+  _info
+) => {
+  const { input } = _args;
+
+  return {
+    token: `token: ${input.email}`,
+    message: "message",
+    status: 200,
+  };
+};
+
 export default {
   createUser,
   updateUser,
   deleteUser,
+  login,
 };

@@ -8,7 +8,7 @@ const Header: React.FC = () => {
     <header
       aria-description="header"
       className={clsx("", {
-        "fixed w-full": true,
+        "fixed w-full bg-white z-50": true,
         "shadow-lg drop-shadow-lg shadow-slate-300": true,
       })}
     >

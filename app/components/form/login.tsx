@@ -5,6 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import Input from "@components/input/input";
 import PasswordInput from "@components/input/password-input";
+import { validateEmail } from "@/util/validate";
 
 type LoginInput = {
   email: string;
@@ -18,36 +19,92 @@ const LoginForm: React.FC = () => {
     watch,
     formState: { errors },
   } = useForm<LoginInput>({
+    mode: "onBlur",
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  console.log(watch("email"));
+  const onSubmit: SubmitHandler<LoginInput> = async (data, e) => {
+    e?.preventDefault();
 
-  const onSubmit: SubmitHandler<LoginInput> = (data) => console.log(data);
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_API_GATEWAY_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+
+        body: JSON.stringify({
+          query,
+          variables: {
+            input: {
+              email: data.email,
+              password: data.password,
+            },
+          },
+        }),
+
+        keepalive: true,
+      });
+
+      const json = await res.json();
+
+      console.log(json);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-8">
+      <div className="mb-2">
         <label
           className="block mb-2 text-sm font-bold text-gray-700"
           htmlFor="login-email-input"
         >
           Email
         </label>
-        <Input id="login-email-input" {...register("email")} />
+        <Input
+          id="login-email-input"
+          placeholder="me@example.com"
+          variant={errors.email ? "danger" : "primary"}
+          {...register("email", {
+            required: {
+              value: true,
+              message: "Email is required",
+            },
+            validate: {
+              validEmail: (v) => validateEmail(v) || "Email is not valid",
+            },
+          })}
+        />
+        <div className="text-sm text-red-400 w-full h-6 mt-4">
+          {errors.email?.message}
+        </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-3">
         <label
           className="block mb-2 text-sm font-bold text-gray-700"
           htmlFor="login-password-input"
         >
           Password
         </label>
-        <PasswordInput {...register("password")} />
+        <PasswordInput
+          variant={errors.password ? "danger" : "primary"}
+          {...register("password", {
+            required: {
+              value: true,
+              message: "Password is required",
+            },
+          })}
+        />
+        <div className="text-sm text-red-400 w-full h-6 mt-4">
+          {errors.password?.message}
+        </div>
       </div>
 
       {/* Remember me */}
@@ -85,3 +142,13 @@ const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
+
+export const query = `#graphql
+  mutation LoginMutation($input: LoginInput!) {
+    login(input: $input) {
+       token,
+       message,
+       status
+    }
+  }
+`;
