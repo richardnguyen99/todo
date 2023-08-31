@@ -26,7 +26,37 @@ const LoginForm: React.FC = () => {
 
   console.log(watch("email"));
 
-  const onSubmit: SubmitHandler<LoginInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<LoginInput> = async (data, e) => {
+    e?.preventDefault();
+
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_API_GATEWAY_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+
+        body: JSON.stringify({
+          query,
+          variables: {
+            input: {
+              email: data.email,
+              password: data.password,
+            },
+          },
+        }),
+
+        keepalive: true,
+      });
+
+      const json = await res.json();
+
+      console.log(json);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -85,3 +115,13 @@ const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
+
+export const query = `#graphql
+  mutation LoginMutation($input: LoginInput!) {
+    login(input: $input) {
+       token,
+       message,
+       status
+    }
+  }
+`;
