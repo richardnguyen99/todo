@@ -37,3 +37,14 @@ input UpdateUserInput {
   about: String
   dob: Date
 }
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginPayload {
+  token: String
+  message: String!
+  status: Int!
+}
