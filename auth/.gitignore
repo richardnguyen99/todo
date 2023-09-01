@@ -478,3 +478,6 @@ $RECYCLE.BIN/
 
 # Certificates
 auth.cert
+
+# App settings
+appsettings.Development.json
