@@ -17,6 +17,20 @@ public class AuthController : IAuthController
         _context = context;
     }
 
+    public async Task<bool> GetUserByEmailAsync(string email)
+    {
+        string result = await _context.UserInfos
+            .Where(x => x.Email == email)
+            .Select(x => x.Email).FirstAsync();
+
+        if (result == null)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task<bool> LoginUserAsync(LoginRequest request)
     {
         string result = await _context.UserInfos
@@ -37,6 +51,22 @@ public class AuthController : IAuthController
 
         if (result != null)
         {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> InsertNewUserAsync(UserInfo newUser)
+    {
+        try
+        {
+            await _context.UserInfos.AddAsync(newUser);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("{Message}", e.Message);
             return false;
         }
 
