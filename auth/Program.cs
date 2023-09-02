@@ -1,11 +1,17 @@
 using Microsoft.EntityFrameworkCore;
-using auth.Models;
 
+using auth.Models;
+using auth.Controllers;
+using auth.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEntityFrameworkNpgsql()
-    .AddDbContext<UserInfoContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AuthConnectionString")));
+    .AddDbContext<UserInfoContext>(options => options.UseNpgsql(
+        builder.Configuration.GetConnectionString("AuthConnectionString")
+    ));
+
+builder.Services.AddScoped<IAuthController, AuthController>();
 
 builder.Services.AddControllers();
 builder.Services.AddGrpc();
@@ -21,7 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGrpcService<auth.Services.AuthService>();
+app.MapGrpcService<AuthService>();
 
 app.UseHttpsRedirection();
 

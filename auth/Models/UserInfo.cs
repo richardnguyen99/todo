@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace auth.Models;
+﻿namespace auth.Models;
 
 public partial class UserInfo
 {
