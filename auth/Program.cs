@@ -1,11 +1,19 @@
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
+using auth.Models;
+using auth.Controllers;
+using auth.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEntityFrameworkNpgsql()
+    .AddDbContext<UserInfoContext>(options => options.UseNpgsql(
+        builder.Configuration.GetConnectionString("AuthConnectionString")
+    ));
 
+builder.Services.AddScoped<IAuthController, AuthController>();
+
+builder.Services.AddControllers();
 builder.Services.AddGrpc();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,7 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGrpcService<auth.Services.AuthService>();
+app.MapGrpcService<AuthService>();
 
 app.UseHttpsRedirection();
 

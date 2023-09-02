@@ -32,7 +32,11 @@ const loginRPC = () => {
       password: "123456",
     },
     (err, response) => {
-      console.log("Greeting: ", response);
+      if (err) {
+        throw new Error(err.message);
+      } else {
+        console.log("response: ", response);
+      }
     }
   );
 };
