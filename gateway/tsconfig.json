@@ -68,6 +68,12 @@
       "@graphql": [
         "./graphql"
       ],
+      "@services/*": [
+        "./services/*"
+      ],
+      "@services": [
+        "./services"
+      ],
     },
     /* Visit https://aka.ms/tsconfig to read more about this file */
     /* Projects */

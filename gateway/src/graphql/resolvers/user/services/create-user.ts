@@ -4,8 +4,6 @@ import config from "@/config";
 import mock from "@graphql/resolvers/mock";
 import { CreateUserInput, User } from "@generated/resolvers-types";
 
-import loginRpcClient from "./login";
-
 const willUseMock =
   config.env.testing || (config.env.development && process.env.USE_MOCK);
 
@@ -22,7 +20,6 @@ const _createUserMock = async (userEntity: CreateUserInput) => {
     ...userEntity,
   };
 
-  loginRpcClient();
   (mock as User[]).push(newUser);
 
   return newUser;

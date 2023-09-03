@@ -11,4 +11,5 @@ type Mutation {
   deleteUser(id: ID!): User!
 
   login(input: LoginInput!): LoginPayload!
+  register(input: RegisterInput!): RegisterPayload!
 }

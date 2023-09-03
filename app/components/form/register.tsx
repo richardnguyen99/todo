@@ -16,15 +16,6 @@ type RegisterFormValues = {
   password: string;
 };
 
-type PasswordState = {
-  level: number;
-  length: boolean;
-  uppercase: boolean;
-  lowercase: boolean;
-  number: boolean;
-  special: boolean;
-};
-
 const RegisterForm: React.FC = () => {
   const {
     register,
@@ -121,6 +112,8 @@ const RegisterForm: React.FC = () => {
   const onSubmit: SubmitHandler<RegisterFormValues> = async (data, e) => {
     e?.preventDefault();
 
+    console.log("submit?");
+
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_API_GATEWAY_URL, {
         method: "POST",
@@ -134,6 +127,7 @@ const RegisterForm: React.FC = () => {
           variables: {
             input: {
               email: data.email,
+              username: data.name,
               password: data.password,
             },
           },
@@ -151,17 +145,17 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-2">
         <label
           className="block mb-2 text-sm font-bold text-gray-700"
           htmlFor="register-name-input"
         >
-          Name
+          Username
         </label>
         <Input
           id="register-name-input"
-          placeholder="Your beautiful name"
+          placeholder="Be creative, little one"
           variant={errors.name ? "danger" : "primary"}
           {...register("name", {
             required: "A name would be nice",
@@ -313,8 +307,7 @@ const RegisterForm: React.FC = () => {
       <div className="flex items-center justify-between mt-4">
         <button
           className="rounded-lg px-4 py-2 font-bold text-white bg-blue-500 hover:bg-sky-600 focus:outline-none focus:shadow-outline"
-          type="button"
-          onClick={handleSubmit(onSubmit)}
+          type="submit"
         >
           Register
         </button>
@@ -326,8 +319,8 @@ const RegisterForm: React.FC = () => {
 export default RegisterForm;
 
 export const query = `#graphql
-  mutation LoginMutation($input: LoginInput!) {
-    login(input: $input) {
+  mutation RegisterMutation($input: RegisterInput!) {
+    register(input: $input) {
        token,
        message,
        status
