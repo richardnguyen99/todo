@@ -74,7 +74,7 @@ public class AuthService : Auth.AuthBase
         {
             Token = $"token: {request.Username} is registered",
             Message = "message",
-            StatusCode = 201
+            StatusCode = 400
         });
     }
 }

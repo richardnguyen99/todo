@@ -19,16 +19,21 @@ public class AuthController : IAuthController
 
     public async Task<bool> GetUserByEmailAsync(string email)
     {
-        string result = await _context.UserInfos
-            .Where(x => x.Email == email)
-            .Select(x => x.Email).FirstAsync();
-
-        if (result == null)
+        try
         {
+            string result = await _context.UserInfos
+                .Where(x => x.Email == email)
+                .Select(x => x.Email).FirstAsync();
+
+            return true;
+
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("{Message}", e.Message);
             return false;
         }
 
-        return true;
     }
 
     public async Task<bool> LoginUserAsync(LoginRequest request)
