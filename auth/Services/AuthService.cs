@@ -73,8 +73,8 @@ public class AuthService : Auth.AuthBase
         return Task.FromResult(new RegisterResponse
         {
             Token = $"token: {request.Username} is registered",
-            Message = "message",
-            StatusCode = 400
+            Message = "User registered successfully",
+            StatusCode = 201
         });
     }
 }
