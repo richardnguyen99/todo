@@ -48,3 +48,15 @@ type LoginPayload {
   message: String!
   status: Int!
 }
+
+input RegisterInput {
+  username: String!
+  email: String!
+  password: String!
+}
+
+type RegisterPayload {
+  token: String
+  message: String!
+  status: Int!
+}
