@@ -5,18 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using auth.Models;
 using auth.Controllers;
 using auth.Services;
+using auth.Dependencies;
 
 // Create a web application instance
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add dependencies to the container
+builder.Services.AddRedisConfig(builder.Configuration);
+builder.Services.AddPostgresConfig(builder.Configuration);
 builder.Services.AddLogging();
-
-// Add database context to the container
-builder.Services.AddEntityFrameworkNpgsql()
-    .AddDbContext<UserInfoContext>(options => options.UseNpgsql(
-        builder.Configuration.GetConnectionString("AuthConnectionString")
-    ));
 
 // Add services to the container
 builder.Services.AddScoped<IAuthController, AuthController>();

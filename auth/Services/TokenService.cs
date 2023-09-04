@@ -84,10 +84,15 @@ public class TokenService : ITokenService
 
     private SigningCredentials CreateSigningCredentials()
     {
+        var key = _configuration.GetSection("Authentication:Secret").Value;
+
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
         return new SigningCredentials(
-            new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(s: _configuration.GetSection("Authentication:Secret").Value)
-            ),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
             SecurityAlgorithms.HmacSha256
         );
     }

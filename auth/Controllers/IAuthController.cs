@@ -1,5 +1,4 @@
 using GrpcAuth;
-
 using auth.Models;
 
 namespace auth.Controllers;

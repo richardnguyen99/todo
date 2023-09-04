@@ -1,6 +1,7 @@
-using GrpcAuth;
-using auth.Models;
 using Microsoft.EntityFrameworkCore;
+using GrpcAuth;
+using auth.Data;
+using auth.Models;
 
 namespace auth.Controllers;
 
@@ -11,7 +12,8 @@ public class AuthController : IAuthController
     private readonly UserInfoContext _context;
     private readonly ILogger<AuthController> _logger;
 
-    public AuthController(UserInfoContext context, ILogger<AuthController> logger)
+    public AuthController(
+        UserInfoContext context, ILogger<AuthController> logger)
     {
         _logger = logger;
         _context = context;
