@@ -1,11 +1,7 @@
 // Main entry point for the Authentication service
-
-using Microsoft.EntityFrameworkCore;
-
-using auth.Models;
-using auth.Controllers;
 using auth.Services;
 using auth.Dependencies;
+using auth.Repositories;
 
 // Create a web application instance
 var builder = WebApplication.CreateBuilder(args);
@@ -15,15 +11,17 @@ builder.Services.AddRedisConfig(builder.Configuration);
 builder.Services.AddPostgresConfig(builder.Configuration);
 builder.Services.AddLogging();
 
+builder.Services.AddGrpc();
+
 // Add services to the container
-builder.Services.AddScoped<IAuthController, AuthController>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddControllers();
-builder.Services.AddGrpc();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 

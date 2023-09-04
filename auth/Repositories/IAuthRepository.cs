@@ -1,10 +1,10 @@
 using GrpcAuth;
 using auth.Models;
 
-namespace auth.Controllers;
+namespace auth.Repositories;
 
-#region "authentication controller"
-public interface IAuthController
+#region "authentication repository"
+public interface IAuthRepository
 {
     Task<bool> LoginUserAsync(LoginRequest request);
     Task<bool> RegisterUserAsync(RegisterRequest request);

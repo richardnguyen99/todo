@@ -3,17 +3,17 @@ using GrpcAuth;
 using auth.Data;
 using auth.Models;
 
-namespace auth.Controllers;
+namespace auth.Repositories;
 
-#region "authentication controller"
+#region "authentication repository"
 
-public class AuthController : IAuthController
+public class AuthRepository : IAuthRepository
 {
     private readonly UserInfoContext _context;
-    private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<AuthRepository> _logger;
 
-    public AuthController(
-        UserInfoContext context, ILogger<AuthController> logger)
+    public AuthRepository(
+        UserInfoContext context, ILogger<AuthRepository> logger)
     {
         _logger = logger;
         _context = context;

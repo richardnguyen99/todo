@@ -1,7 +1,7 @@
 using Grpc.Core;
 using GrpcAuth;
 
-using auth.Controllers;
+using auth.Repositories;
 using auth.Models;
 
 namespace auth.Services;
@@ -11,20 +11,20 @@ public class AuthService : Auth.AuthBase
 {
     private readonly ILogger<AuthService> _logger;
 
-    private readonly IAuthController _authController;
+    private readonly IAuthRepository _authRepository;
 
     private readonly ITokenService _tokenService;
 
-    public AuthService(IAuthController authController, ILogger<AuthService> logger, ITokenService tokenService)
+    public AuthService(IAuthRepository authRepository, ILogger<AuthService> logger, ITokenService tokenService)
     {
-        _authController = authController;
+        _authRepository = authRepository;
         _logger = logger;
         _tokenService = tokenService;
     }
 
     public override Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
     {
-        var result = _authController.LoginUserAsync(request);
+        var result = _authRepository.LoginUserAsync(request);
 
         return Task.FromResult(new LoginResponse
         {
@@ -36,7 +36,7 @@ public class AuthService : Auth.AuthBase
 
     public override Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
     {
-        var result = _authController.GetUserByEmailAsync(request.Email);
+        var result = _authRepository.GetUserByEmailAsync(request.Email);
 
         if (result.Result)
         {
@@ -61,7 +61,7 @@ public class AuthService : Auth.AuthBase
             Password = hashedPassword
         };
 
-        result = _authController.InsertNewUserAsync(newUserInfo);
+        result = _authRepository.InsertNewUserAsync(newUserInfo);
 
         if (!result.Result)
         {
@@ -87,5 +87,17 @@ public class AuthService : Auth.AuthBase
             StatusCode = 201
         });
     }
+
+    public override Task<ValidateTokenResponse> ValidateToken(ValidateTokenRequest request, ServerCallContext context)
+    {
+        // var result = _tokenService.ValidateToken(request.Token);
+
+        return Task.FromResult(new ValidateTokenResponse
+        {
+            Message = "message",
+            StatusCode = 200
+        });
+    }
 }
+
 #endregion
