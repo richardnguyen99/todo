@@ -1,12 +1,12 @@
 // GENERATED CODE -- DO NOT EDIT!
 
-"use strict";
-var grpc = require("@grpc/grpc-js");
-var auth_pb = require("./auth_pb.js");
+'use strict';
+var grpc = require('@grpc/grpc-js');
+var auth_pb = require('./auth_pb.js');
 
 function serialize_auth_LoginRequest(arg) {
   if (!(arg instanceof auth_pb.LoginRequest)) {
-    throw new Error("Expected argument of type auth.LoginRequest");
+    throw new Error('Expected argument of type auth.LoginRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
@@ -17,7 +17,7 @@ function deserialize_auth_LoginRequest(buffer_arg) {
 
 function serialize_auth_LoginResponse(arg) {
   if (!(arg instanceof auth_pb.LoginResponse)) {
-    throw new Error("Expected argument of type auth.LoginResponse");
+    throw new Error('Expected argument of type auth.LoginResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
@@ -28,7 +28,7 @@ function deserialize_auth_LoginResponse(buffer_arg) {
 
 function serialize_auth_RegisterRequest(arg) {
   if (!(arg instanceof auth_pb.RegisterRequest)) {
-    throw new Error("Expected argument of type auth.RegisterRequest");
+    throw new Error('Expected argument of type auth.RegisterRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
@@ -39,7 +39,7 @@ function deserialize_auth_RegisterRequest(buffer_arg) {
 
 function serialize_auth_RegisterResponse(arg) {
   if (!(arg instanceof auth_pb.RegisterResponse)) {
-    throw new Error("Expected argument of type auth.RegisterResponse");
+    throw new Error('Expected argument of type auth.RegisterResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
@@ -48,9 +48,10 @@ function deserialize_auth_RegisterResponse(buffer_arg) {
   return auth_pb.RegisterResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-var AuthService = (exports.AuthService = {
+
+var AuthService = exports.AuthService = {
   login: {
-    path: "/auth.Auth/Login",
+    path: '/auth.Auth/Login',
     requestStream: false,
     responseStream: false,
     requestType: auth_pb.LoginRequest,
@@ -61,7 +62,7 @@ var AuthService = (exports.AuthService = {
     responseDeserialize: deserialize_auth_LoginResponse,
   },
   register: {
-    path: "/auth.Auth/Register",
+    path: '/auth.Auth/Register',
     requestStream: false,
     responseStream: false,
     requestType: auth_pb.RegisterRequest,
@@ -71,6 +72,6 @@ var AuthService = (exports.AuthService = {
     responseSerialize: serialize_auth_RegisterResponse,
     responseDeserialize: deserialize_auth_RegisterResponse,
   },
-});
+};
 
 exports.AuthClient = grpc.makeGenericClientConstructor(AuthService);

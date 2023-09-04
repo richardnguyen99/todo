@@ -87,7 +87,6 @@ const register: MutationResolvers["register"] = async (
     return {
       status: res.getStatusCode(),
       message: res.getMessage(),
-      token: res.getToken(),
     };
   });
 };
