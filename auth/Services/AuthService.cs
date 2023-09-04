@@ -1,7 +1,8 @@
+using Microsoft.Extensions.Caching.Distributed;
 using Grpc.Core;
 using GrpcAuth;
 
-using auth.Controllers;
+using auth.Repositories;
 using auth.Models;
 
 namespace auth.Services;
@@ -11,29 +12,67 @@ public class AuthService : Auth.AuthBase
 {
     private readonly ILogger<AuthService> _logger;
 
-    private readonly IAuthController _authController;
+    private readonly IAuthRepository _authRepository;
 
-    public AuthService(IAuthController authController, ILogger<AuthService> logger)
+    private readonly ITokenService _tokenService;
+    private readonly IDistributedCache _cache;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public AuthService(
+        IAuthRepository authRepository,
+        ILogger<AuthService> logger,
+        ITokenService tokenService,
+        IDistributedCache cache,
+        IHttpContextAccessor httpContextAccessor)
     {
-        _authController = authController;
+        _authRepository = authRepository;
         _logger = logger;
+        _tokenService = tokenService;
+        _cache = cache;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public override Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
     {
-        var result = _authController.LoginUserAsync(request);
+        var result = _authRepository.LoginUserAsync(request);
+
+
+        if (result.Result == null)
+        {
+            return Task.FromResult(new LoginResponse
+            {
+                // Return 401 meaning that the request has not been applied
+                // because it lacks valid authentication credentials for the
+                // target resource.
+                AccessToken = string.Empty,
+                RefreshToken = string.Empty,
+                Message = "Invalid credentials",
+                StatusCode = 401
+            });
+        }
+
+
+        var accessToken = _tokenService.CreateAccessToken(result.Result);
+        var refreshToken = _tokenService.CreateRefreshToken(result.Result);
+
+        _cache.Remove(result.Result.Email);
+        _cache.SetString(result.Result.Email, refreshToken);
+
+        _logger.LogInformation(message:
+            "User logged in\nToken: {}", accessToken);
 
         return Task.FromResult(new LoginResponse
         {
-            Token = $"token {result.Result}",
-            Message = "message",
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            Message = "Login successful",
             StatusCode = 200
         });
     }
 
     public override Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
     {
-        var result = _authController.GetUserByEmailAsync(request.Email);
+        var result = _authRepository.GetUserByEmailAsync(request.Email);
 
         if (result.Result)
         {
@@ -41,7 +80,7 @@ public class AuthService : Auth.AuthBase
             {
                 // Return 200 meaning that the request was processed 
                 // successfully but the email has already been used.
-                Message = "This email has already been used",
+                Message = "Unavailable email",
                 StatusCode = 200
             });
         }
@@ -51,12 +90,14 @@ public class AuthService : Auth.AuthBase
                     .BCrypt
                     .HashPassword(request.Password, salt);
 
-        result = _authController.InsertNewUserAsync(new UserInfo
+        var newUserInfo = new UserInfo
         {
             Username = request.Username,
             Email = request.Email,
             Password = hashedPassword
-        });
+        };
+
+        result = _authRepository.InsertNewUserAsync(newUserInfo);
 
         if (!result.Result)
         {
@@ -72,10 +113,23 @@ public class AuthService : Auth.AuthBase
 
         return Task.FromResult(new RegisterResponse
         {
-            Token = $"token: {request.Username} is registered",
             Message = "User registered successfully",
             StatusCode = 201
         });
     }
+
+    public override Task<ValidateTokenResponse> ValidateToken(
+        ValidateTokenRequest request,
+        ServerCallContext context)
+    {
+        // var result = _tokenService.ValidateToken(request.Token);
+
+        return Task.FromResult(new ValidateTokenResponse
+        {
+            Message = "message",
+            StatusCode = 200
+        });
+    }
 }
+
 #endregion

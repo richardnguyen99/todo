@@ -7,6 +7,7 @@ package auth;
 service Auth {
     rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
+    rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {}
 }
 
 message LoginRequest {
@@ -15,9 +16,10 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    string token = 1;
-    string message = 2;
-    int32 status_code = 3;
+    string accessToken = 1;
+    string refreshToken = 2;
+    string message = 3;
+    int32 status_code = 4;
 }
 
 message RegisterRequest {
@@ -27,7 +29,15 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
+    string message = 1;
+    int32 status_code = 2;
+}
+
+message ValidateTokenRequest {
     string token = 1;
-    string message = 2;
-    int32 status_code = 3;
+}
+
+message ValidateTokenResponse {
+    string message = 1;
+    int32 status_code = 2;
 }

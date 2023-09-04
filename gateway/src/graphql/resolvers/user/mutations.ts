@@ -1,11 +1,8 @@
-import type {
-  MutationResolvers,
-  RegisterPayload,
-} from "@generated/resolvers-types";
+import type { MutationResolvers } from "@generated/resolvers-types";
 
 import services from "@graphql/resolvers/user/services";
 import authService from "@services/auth";
-import { RegisterRequest } from "@services/auth_pb";
+import { RegisterRequest, RegisterResponse } from "@services/auth_pb";
 
 const createUser: MutationResolvers["createUser"] = async (
   _parent,
@@ -75,21 +72,23 @@ const register: MutationResolvers["register"] = async (
   registerRequest.setPassword(input.password);
   registerRequest.setUsername(input.username);
 
-  const response = {} as RegisterPayload;
-  await authService.register(registerRequest, (err, res) => {
-    if (err) {
-      console.log(err);
-      throw new Error(err.message);
-    }
+  return new Promise<RegisterResponse>((resolve, reject) =>
+    authService.register(registerRequest, (err, res) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
 
-    console.log(res);
+      console.log(res);
 
-    response.status = res.getStatusCode();
-    response.message = res.getMessage();
-    response.token = res.getToken();
+      resolve(res);
+    })
+  ).then((res) => {
+    return {
+      status: res.getStatusCode(),
+      message: res.getMessage(),
+    };
   });
-
-  return response;
 };
 
 export default {

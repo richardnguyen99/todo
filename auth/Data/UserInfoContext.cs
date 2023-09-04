@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using auth.Models;
 
-namespace auth.Models;
+namespace auth.Data;
 
 public partial class UserInfoContext : DbContext
 {

@@ -44,19 +44,19 @@ input LoginInput {
 }
 
 type LoginPayload {
-  token: String
+  accessToken: String
+  refreshToken: String
   message: String!
   status: Int!
 }
 
 input RegisterInput {
-  username: String!
+  username: String
   email: String!
   password: String!
 }
 
 type RegisterPayload {
-  token: String
   message: String!
   status: Int!
 }
