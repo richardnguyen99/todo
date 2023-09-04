@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRedisConfig(builder.Configuration);
 builder.Services.AddPostgresConfig(builder.Configuration);
 builder.Services.AddLogging();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddGrpc();
 

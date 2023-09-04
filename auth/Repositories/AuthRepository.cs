@@ -38,18 +38,28 @@ public class AuthRepository : IAuthRepository
 
     }
 
-    public async Task<bool> LoginUserAsync(LoginRequest request)
+    public async Task<UserInfo?> LoginUserAsync(LoginRequest request)
     {
-        string result = await _context.UserInfos
+        var result = await _context.UserInfos
             .Where(x => x.Email == request.Email)
-            .Select(x => x.Password).FirstAsync();
+            .Select(u => new UserInfo
+            {
+                Email = u.Email,
+                Password = u.Password
+            }).FirstOrDefaultAsync();
 
         if (result == null)
         {
-            return false;
+            return null;
         }
 
-        return result.CompareTo(request.Password) == 0;
+        if (!VerifyPassword(request.Password, result.Password))
+        {
+            return null;
+        }
+
+        return result;
+
     }
 
     public async Task<bool> RegisterUserAsync(RegisterRequest request)
@@ -78,6 +88,17 @@ public class AuthRepository : IAuthRepository
         }
 
         return true;
+    }
+
+    private static string HashPassword(string password)
+    {
+        var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+        return BCrypt.Net.BCrypt.HashPassword(password, salt);
+    }
+
+    private static bool VerifyPassword(string password, string hashedPassword)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
     }
 };
 

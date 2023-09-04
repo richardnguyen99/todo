@@ -6,7 +6,7 @@ namespace auth.Repositories;
 #region "authentication repository"
 public interface IAuthRepository
 {
-    Task<bool> LoginUserAsync(LoginRequest request);
+    Task<UserInfo?> LoginUserAsync(LoginRequest request);
     Task<bool> RegisterUserAsync(RegisterRequest request);
 
     Task<bool> GetUserByEmailAsync(string email);

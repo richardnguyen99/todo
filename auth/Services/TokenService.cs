@@ -20,7 +20,7 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string CreateToken(UserInfo user)
+    public string CreateAccessToken(UserInfo user)
     {
         var expiration = DateTime.UtcNow
                             .AddMinutes(ITokenService.ExpirationTime);
@@ -45,6 +45,13 @@ public class TokenService : ITokenService
             Console.WriteLine(e.Message);
             return string.Empty;
         }
+    }
+
+    public string CreateRefreshToken(UserInfo user)
+    {
+        var refreshToken = Guid.NewGuid().ToString();
+
+        return refreshToken;
     }
 
     private static JwtSecurityToken CreateJwtToken(

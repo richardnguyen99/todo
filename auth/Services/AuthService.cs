@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Distributed;
 using Grpc.Core;
 using GrpcAuth;
 
@@ -14,22 +15,57 @@ public class AuthService : Auth.AuthBase
     private readonly IAuthRepository _authRepository;
 
     private readonly ITokenService _tokenService;
+    private readonly IDistributedCache _cache;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AuthService(IAuthRepository authRepository, ILogger<AuthService> logger, ITokenService tokenService)
+    public AuthService(
+        IAuthRepository authRepository,
+        ILogger<AuthService> logger,
+        ITokenService tokenService,
+        IDistributedCache cache,
+        IHttpContextAccessor httpContextAccessor)
     {
         _authRepository = authRepository;
         _logger = logger;
         _tokenService = tokenService;
+        _cache = cache;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public override Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
     {
         var result = _authRepository.LoginUserAsync(request);
 
+
+        if (result.Result == null)
+        {
+            return Task.FromResult(new LoginResponse
+            {
+                // Return 401 meaning that the request has not been applied
+                // because it lacks valid authentication credentials for the
+                // target resource.
+                AccessToken = string.Empty,
+                RefreshToken = string.Empty,
+                Message = "Invalid credentials",
+                StatusCode = 401
+            });
+        }
+
+
+        var accessToken = _tokenService.CreateAccessToken(result.Result);
+        var refreshToken = _tokenService.CreateRefreshToken(result.Result);
+
+        _cache.Remove(result.Result.Email);
+        _cache.SetString(result.Result.Email, refreshToken);
+
+        _logger.LogInformation(message:
+            "User logged in\nToken: {}", accessToken);
+
         return Task.FromResult(new LoginResponse
         {
-            Token = $"token {result.Result}",
-            Message = "message",
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            Message = "Login successful",
             StatusCode = 200
         });
     }
@@ -44,7 +80,7 @@ public class AuthService : Auth.AuthBase
             {
                 // Return 200 meaning that the request was processed 
                 // successfully but the email has already been used.
-                Message = "This email has already been used",
+                Message = "Unavailable email",
                 StatusCode = 200
             });
         }
@@ -75,20 +111,16 @@ public class AuthService : Auth.AuthBase
             });
         }
 
-
-        var token = _tokenService.CreateToken(newUserInfo);
-
-        _logger.LogInformation(message: "User registered\nToken: {}", token);
-
         return Task.FromResult(new RegisterResponse
         {
-            Token = $"{token}",
             Message = "User registered successfully",
             StatusCode = 201
         });
     }
 
-    public override Task<ValidateTokenResponse> ValidateToken(ValidateTokenRequest request, ServerCallContext context)
+    public override Task<ValidateTokenResponse> ValidateToken(
+        ValidateTokenRequest request,
+        ServerCallContext context)
     {
         // var result = _tokenService.ValidateToken(request.Token);
 

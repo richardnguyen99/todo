@@ -8,7 +8,7 @@ public static class RedisConfig
     {
         services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = configuration.GetConnectionString("Redis");
+            options.Configuration = configuration.GetConnectionString("RedisConnectionString");
             options.InstanceName = "auth";
         });
 
