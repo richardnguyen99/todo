@@ -13,10 +13,13 @@ public class AuthService : Auth.AuthBase
 
     private readonly IAuthController _authController;
 
-    public AuthService(IAuthController authController, ILogger<AuthService> logger)
+    private readonly ITokenService _tokenService;
+
+    public AuthService(IAuthController authController, ILogger<AuthService> logger, ITokenService tokenService)
     {
         _authController = authController;
         _logger = logger;
+        _tokenService = tokenService;
     }
 
     public override Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
@@ -51,12 +54,14 @@ public class AuthService : Auth.AuthBase
                     .BCrypt
                     .HashPassword(request.Password, salt);
 
-        result = _authController.InsertNewUserAsync(new UserInfo
+        var newUserInfo = new UserInfo
         {
             Username = request.Username,
             Email = request.Email,
             Password = hashedPassword
-        });
+        };
+
+        result = _authController.InsertNewUserAsync(newUserInfo);
 
         if (!result.Result)
         {
@@ -70,9 +75,14 @@ public class AuthService : Auth.AuthBase
             });
         }
 
+
+        var token = _tokenService.CreateToken(newUserInfo);
+
+        _logger.LogInformation(message: "User registered\nToken: {}", token);
+
         return Task.FromResult(new RegisterResponse
         {
-            Token = $"token: {request.Username} is registered",
+            Token = $"{token}",
             Message = "User registered successfully",
             StatusCode = 201
         });
