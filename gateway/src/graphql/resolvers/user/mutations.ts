@@ -1,5 +1,7 @@
-import type { MutationResolvers } from "@generated/resolvers-types";
+import * as grpc from "@grpc/grpc-js";
+import { Request } from "express";
 
+import type { MutationResolvers } from "@generated/resolvers-types";
 import services from "@graphql/resolvers/user/services";
 import authService from "@services/auth";
 import {
@@ -61,8 +63,23 @@ const login: MutationResolvers["login"] = async (
   loginRequest.setEmail(input.email);
   loginRequest.setPassword(input.password);
 
+  const req = _context.req as Request;
+  const metadata = new grpc.Metadata();
+
+  console.log(req.headers);
+
+  if (req.headers["origin"]) {
+    metadata.add("origin", req.headers["origin"] as string);
+  }
+
+  metadata.add(
+    "forwarded",
+    `for=${req.ip};by=todo-gateway;proto=${req.protocol}`
+  );
+
   return new Promise<LoginResponse>((resolve, reject) =>
-    authService.login(loginRequest, (err, res) => {
+    authService.login(loginRequest, metadata, (err, res) => {
+      console.log("sent");
       if (err) {
         reject(err);
       }

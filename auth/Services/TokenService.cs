@@ -1,3 +1,5 @@
+//
+
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,6 +13,8 @@ namespace auth.Services;
 
 #region "token controller"
 
+// Summary:
+//    Token service class  to generate JWT tokens for authentication.
 public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
@@ -25,10 +29,24 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string CreateAccessToken(UserInfo user)
+    public List<string> CreateTokens(UserInfo user, string ipAddress)
     {
-        var expiration = DateTime.UtcNow
-                            .AddMinutes(ITokenService.ExpirationTime);
+        var sessionId = Guid.NewGuid().ToString();
+
+        var accessToken = CreateAccessToken(user, sessionId, ipAddress);
+        var refreshToken = CreateRefreshToken(user, sessionId, ipAddress);
+
+        return new List<string> { accessToken, refreshToken };
+    }
+
+    public string CreateAccessToken(
+        UserInfo user,
+        string sessionId,
+        string ipAddress)
+    {
+        var expiration = DateTime.UtcNow.AddMinutes(
+            ITokenService.AccessTokenExpirationTime
+        );
 
         _logger.LogInformation(message:
             "User founded with email: {}", user.Email);
@@ -36,10 +54,10 @@ public class TokenService : ITokenService
         try
         {
             JwtSecurityToken token = CreateJwtToken(
-                                        CreateClaims(user),
-                                        CreateSigningCredentials(),
-                                        expiration
-                                    );
+                CreateAccessTokenClaims(user, sessionId, ipAddress),
+                CreateSigningCredentials(),
+                expiration
+            );
 
             _logger.LogInformation(message:
                 "Token created: {}", token);
@@ -56,11 +74,41 @@ public class TokenService : ITokenService
         }
     }
 
-    public string CreateRefreshToken(UserInfo user)
+    public string CreateRefreshToken(
+        UserInfo user,
+        string sessionId,
+        string ipAddress)
     {
-        var refreshToken = Guid.NewGuid().ToString();
+        var expiration = DateTime.UtcNow.AddDays(value:
+            ITokenService.RefreshTokenExpirationTime
+        );
 
-        return refreshToken;
+        _logger.LogInformation(message:
+            "User founded with email: {}", user.Email
+        );
+
+        try
+        {
+            JwtSecurityToken token = CreateJwtToken(
+                claims: CreateRefreshTokenClaims(user, sessionId, ipAddress),
+                credentials: CreateSigningCredentials(),
+                expiration: expiration
+            );
+
+            _logger.LogInformation(message:
+                "Token created: {}", token
+            );
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var stringToken = tokenHandler.WriteToken(token);
+
+            return stringToken;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("{}.\nToken is empty!", e.Message);
+            return string.Empty;
+        }
     }
 
     private static JwtSecurityToken CreateJwtToken(
@@ -86,22 +134,69 @@ public class TokenService : ITokenService
         }
     }
 
-    private static List<Claim> CreateClaims(UserInfo user)
+    private static List<Claim> CreateAccessTokenClaims(
+        UserInfo user,
+        string sessionId,
+        string ipAddress)
     {
         var claims = new List<Claim> {
+            // Registered claims
+            new Claim(JwtRegisteredClaimNames.Iss, "https://auth:7135"),
+            new Claim(JwtRegisteredClaimNames.Aud, ipAddress),
             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
             new Claim(
+                JwtRegisteredClaimNames.Exp,
+                DateTime.UtcNow.AddDays(
+                    value: ITokenService.RefreshTokenExpirationTime
+                ).ToString(CultureInfo.InvariantCulture)
+            ),
+            new Claim(
                 JwtRegisteredClaimNames.Jti,
-                Guid.NewGuid().ToString()
+                sessionId
             ),
             new Claim(
                 JwtRegisteredClaimNames.Iat,
                 DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)
             ),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Typ, "refresh_token"),
 
+            // Custom claims
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Sid, user.Id.ToString())
+        };
+
+        return claims;
+    }
+
+    private static List<Claim> CreateRefreshTokenClaims(
+        UserInfo user,
+        string sessionId,
+        string ipAddress)
+    {
+        var claims = new List<Claim> {
+            // Registered claims
+            new Claim(JwtRegisteredClaimNames.Iss, "https://auth:7135"),
+            new Claim(JwtRegisteredClaimNames.Aud, ipAddress),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(
+                JwtRegisteredClaimNames.Exp,
+                DateTime.UtcNow.AddDays(
+                    value: ITokenService.RefreshTokenExpirationTime
+                ).ToString(CultureInfo.InvariantCulture)
+            ),
+            new Claim(
+                JwtRegisteredClaimNames.Jti,
+                sessionId
+            ),
+            new Claim(
+                JwtRegisteredClaimNames.Iat,
+                DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)
+            ),
+            new Claim(JwtRegisteredClaimNames.Typ, "refresh_token"),
+
+            // Custom claims
+            new Claim(ClaimTypes.Email, user.Email)
         };
 
         return claims;

@@ -34,8 +34,31 @@ public class AuthService : Auth.AuthBase
 
     public override Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
     {
-        var result = _authRepository.LoginUserAsync(request);
+        var ipAddress = context.RequestHeaders
+                        .Where(x => x.Key.ToLower() == "forwarded")
+                        .FirstOrDefault();
 
+        foreach (var header in context.RequestHeaders)
+        {
+            _logger.LogInformation(message:
+                "{}: {}", header.Key, header.Value);
+        }
+
+        if (ipAddress == null)
+        {
+            return Task.FromResult(new LoginResponse
+            {
+                // Bad request from the gateway.
+                AccessToken = string.Empty,
+                RefreshToken = string.Empty,
+                Message = "Bad request",
+                StatusCode = 400
+            });
+        }
+
+        // Add check to make sure the request is coming from the gateway
+
+        var result = _authRepository.LoginUserAsync(request);
 
         if (result.Result == null)
         {
@@ -54,19 +77,19 @@ public class AuthService : Auth.AuthBase
         _logger.LogInformation(message:
             "User founded with email: {}", result.Result.Email);
 
-        var accessToken = _tokenService.CreateAccessToken(result.Result);
-        var refreshToken = _tokenService.CreateRefreshToken(result.Result);
+        var sessionId = Guid.NewGuid().ToString();
+        var tokens = _tokenService.CreateTokens(result.Result, ipAddress.Value);
 
-        _cache.Remove(result.Result.Email);
-        _cache.SetString(result.Result.Email, refreshToken);
+        _cache.Remove(tokens[1]);
+        _cache.SetString(tokens[1], "1");
 
         _logger.LogInformation(message:
-            "User logged in\nToken: {}", accessToken);
+            "User logged in\nToken: {}", tokens[0]);
 
         return Task.FromResult(new LoginResponse
         {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken,
+            AccessToken = tokens[0],
+            RefreshToken = tokens[1],
             Message = "Login successful",
             StatusCode = 200
         });
