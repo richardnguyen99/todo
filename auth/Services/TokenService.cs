@@ -15,8 +15,13 @@ public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
 
-    public TokenService(IConfiguration configuration)
+    private readonly ILogger<TokenService> _logger;
+
+    public TokenService(ILogger<
+        TokenService> logger,
+        IConfiguration configuration)
     {
+        _logger = logger;
         _configuration = configuration;
     }
 
@@ -25,15 +30,19 @@ public class TokenService : ITokenService
         var expiration = DateTime.UtcNow
                             .AddMinutes(ITokenService.ExpirationTime);
 
-        JwtSecurityToken token;
+        _logger.LogInformation(message:
+            "User founded with email: {}", user.Email);
 
         try
         {
-            token = CreateJwtToken(
-                CreateClaims(user),
-                CreateSigningCredentials(),
-                expiration
-            );
+            JwtSecurityToken token = CreateJwtToken(
+                                        CreateClaims(user),
+                                        CreateSigningCredentials(),
+                                        expiration
+                                    );
+
+            _logger.LogInformation(message:
+                "Token created: {}", token);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var stringToken = tokenHandler.WriteToken(token);
@@ -42,7 +51,7 @@ public class TokenService : ITokenService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            _logger.LogError("{}.\nToken is empty!", e.Message);
             return string.Empty;
         }
     }
@@ -55,17 +64,26 @@ public class TokenService : ITokenService
     }
 
     private static JwtSecurityToken CreateJwtToken(
-        List<Claim> claims, SigningCredentials credentials, DateTime expiration)
+        List<Claim> claims,
+        SigningCredentials credentials,
+        DateTime expiration)
     {
-        var token = new JwtSecurityToken(
-            issuer: "https://auth:7135",
-            audience: "https://gateway:4444",
-            claims: claims,
-            expires: expiration,
-            signingCredentials: credentials
-        );
+        try
+        {
+            var token = new JwtSecurityToken(
+                issuer: "https://auth:7135",
+                audience: "https://gateway:4444",
+                claims: claims,
+                expires: expiration,
+                signingCredentials: credentials
+            );
 
-        return token;
+            return token;
+        }
+        catch (Exception e)
+        {
+            throw new ArgumentNullException($"CreateJwtToken: {e.Message}");
+        }
     }
 
     private static List<Claim> CreateClaims(UserInfo user)

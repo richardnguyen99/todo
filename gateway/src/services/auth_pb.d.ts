@@ -30,10 +30,10 @@ export namespace LoginRequest {
 }
 
 export class LoginResponse extends jspb.Message { 
-    getAccesstoken(): string;
-    setAccesstoken(value: string): LoginResponse;
-    getRefreshtoken(): string;
-    setRefreshtoken(value: string): LoginResponse;
+    getAccessToken(): string;
+    setAccessToken(value: string): LoginResponse;
+    getRefreshToken(): string;
+    setRefreshToken(value: string): LoginResponse;
     getMessage(): string;
     setMessage(value: string): LoginResponse;
     getStatusCode(): number;
@@ -51,8 +51,8 @@ export class LoginResponse extends jspb.Message {
 
 export namespace LoginResponse {
     export type AsObject = {
-        accesstoken: string,
-        refreshtoken: string,
+        accessToken: string,
+        refreshToken: string,
         message: string,
         statusCode: number,
     }

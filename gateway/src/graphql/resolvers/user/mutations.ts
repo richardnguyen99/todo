@@ -2,7 +2,12 @@ import type { MutationResolvers } from "@generated/resolvers-types";
 
 import services from "@graphql/resolvers/user/services";
 import authService from "@services/auth";
-import { RegisterRequest, RegisterResponse } from "@services/auth_pb";
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from "@services/auth_pb";
 
 const createUser: MutationResolvers["createUser"] = async (
   _parent,
@@ -52,11 +57,26 @@ const login: MutationResolvers["login"] = async (
 ) => {
   const { input } = _args;
 
-  return {
-    token: `token: ${input.email}`,
-    message: "message",
-    status: 200,
-  };
+  const loginRequest = new LoginRequest();
+  loginRequest.setEmail(input.email);
+  loginRequest.setPassword(input.password);
+
+  return new Promise<LoginResponse>((resolve, reject) =>
+    authService.login(loginRequest, (err, res) => {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(res);
+    })
+  ).then((res) => {
+    return {
+      status: res.getStatusCode(),
+      message: res.getMessage(),
+      accessToken: res.getAccessToken(),
+      refreshToken: res.getRefreshToken(),
+    };
+  });
 };
 
 const register: MutationResolvers["register"] = async (

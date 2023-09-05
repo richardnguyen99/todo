@@ -51,6 +51,8 @@ public class AuthService : Auth.AuthBase
             });
         }
 
+        _logger.LogInformation(message:
+            "User founded with email: {}", result.Result.Email);
 
         var accessToken = _tokenService.CreateAccessToken(result.Result);
         var refreshToken = _tokenService.CreateRefreshToken(result.Result);

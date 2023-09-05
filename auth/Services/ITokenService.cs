@@ -6,7 +6,7 @@ namespace auth.Services;
 
 public interface ITokenService
 {
-    public static readonly double ExpirationTime = 60;
+    public static readonly double ExpirationTime = 30;
 
     public string CreateAccessToken(UserInfo user);
 

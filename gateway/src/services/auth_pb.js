@@ -301,8 +301,8 @@ proto.auth.LoginResponse.prototype.toObject = function(opt_includeInstance) {
  */
 proto.auth.LoginResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accesstoken: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    refreshtoken: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    accessToken: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    refreshToken: jspb.Message.getFieldWithDefault(msg, 2, ""),
     message: jspb.Message.getFieldWithDefault(msg, 3, ""),
     statusCode: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
@@ -343,11 +343,11 @@ proto.auth.LoginResponse.deserializeBinaryFromReader = function(msg, reader) {
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setAccesstoken(value);
+      msg.setAccessToken(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRefreshtoken(value);
+      msg.setRefreshToken(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
@@ -386,14 +386,14 @@ proto.auth.LoginResponse.prototype.serializeBinary = function() {
  */
 proto.auth.LoginResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getAccesstoken();
+  f = message.getAccessToken();
   if (f.length > 0) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getRefreshtoken();
+  f = message.getRefreshToken();
   if (f.length > 0) {
     writer.writeString(
       2,
@@ -418,10 +418,10 @@ proto.auth.LoginResponse.serializeBinaryToWriter = function(message, writer) {
 
 
 /**
- * optional string accessToken = 1;
+ * optional string access_token = 1;
  * @return {string}
  */
-proto.auth.LoginResponse.prototype.getAccesstoken = function() {
+proto.auth.LoginResponse.prototype.getAccessToken = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -430,16 +430,16 @@ proto.auth.LoginResponse.prototype.getAccesstoken = function() {
  * @param {string} value
  * @return {!proto.auth.LoginResponse} returns this
  */
-proto.auth.LoginResponse.prototype.setAccesstoken = function(value) {
+proto.auth.LoginResponse.prototype.setAccessToken = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional string refreshToken = 2;
+ * optional string refresh_token = 2;
  * @return {string}
  */
-proto.auth.LoginResponse.prototype.getRefreshtoken = function() {
+proto.auth.LoginResponse.prototype.getRefreshToken = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -448,7 +448,7 @@ proto.auth.LoginResponse.prototype.getRefreshtoken = function() {
  * @param {string} value
  * @return {!proto.auth.LoginResponse} returns this
  */
-proto.auth.LoginResponse.prototype.setRefreshtoken = function(value) {
+proto.auth.LoginResponse.prototype.setRefreshToken = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
