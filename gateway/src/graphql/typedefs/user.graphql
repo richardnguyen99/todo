@@ -51,7 +51,7 @@ type LoginPayload {
 }
 
 input RegisterInput {
-  username: String
+  username: String!
   email: String!
   password: String!
 }

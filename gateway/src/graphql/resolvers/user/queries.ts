@@ -1,6 +1,39 @@
+import { Request, Response } from "express";
+
 import type { QueryResolvers } from "@generated/resolvers-types";
 
 import mock from "../mock";
+
+const getUser: QueryResolvers["getUser"] = async (
+  _parent,
+  _args,
+  _context,
+  _info
+) => {
+  const req = _context.req as Request;
+  const res = _context.res as Response;
+
+  // Add support headers for CORS policy
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+
+  console.log(req.cookies);
+
+  return {
+    id: "somthing",
+    name: "somthing",
+    email: "somthing",
+    password: "somthing",
+  };
+};
 
 const user: QueryResolvers["user"] = async (
   _parent,
@@ -37,4 +70,5 @@ const users: QueryResolvers["users"] = async (
 export default {
   user,
   users,
+  getUser,
 };

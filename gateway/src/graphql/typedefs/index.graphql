@@ -1,6 +1,7 @@
 scalar Date
 
 type Query {
+  getUser: User
   user(id: ID!): User
   users: [User]!
 }

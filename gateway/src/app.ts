@@ -2,6 +2,7 @@ import http from "http";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -16,6 +17,7 @@ import rootResolver from "./graphql/resolvers";
 
 const createExpressApp = async () => {
   const app = express();
+
   const httpServer = http.createServer(app);
 
   // prettier-ignore
@@ -37,6 +39,8 @@ const createExpressApp = async () => {
   app.use(
     cors(),
     bodyParser.json(),
+    bodyParser.urlencoded({ extended: true }),
+    cookieParser(),
     expressMiddleware(server, {
       context: async ({ req, res }) => ({ req, res }),
     })

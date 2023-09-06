@@ -3,7 +3,8 @@ import clsx from "classnames";
 import Link from "next/link";
 
 import Form from "@components/form";
-const Home: React.FC = () => {
+
+const Home = async () => {
   return (
     <main>
       <section
