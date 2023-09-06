@@ -1,5 +1,5 @@
 import * as grpc from "@grpc/grpc-js";
-import { Request } from "express";
+import { Request, Response } from "express";
 
 import type { MutationResolvers } from "@generated/resolvers-types";
 import services from "@graphql/resolvers/user/services";
@@ -64,6 +64,7 @@ const login: MutationResolvers["login"] = async (
   loginRequest.setPassword(input.password);
 
   const req = _context.req as Request;
+  const res = _context.res as Response;
   const metadata = new grpc.Metadata();
 
   console.log(req.headers);
@@ -78,20 +79,42 @@ const login: MutationResolvers["login"] = async (
   );
 
   return new Promise<LoginResponse>((resolve, reject) =>
-    authService.login(loginRequest, metadata, (err, res) => {
+    authService.login(loginRequest, metadata, (err, result) => {
       console.log("sent");
       if (err) {
         reject(err);
       }
 
-      resolve(res);
+      resolve(result);
     })
-  ).then((res) => {
+  ).then((result) => {
+    res.cookie("access_token", result.getAccessToken(), {
+      domain: "",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+    });
+
+    res.cookie("refresh_token", result.getRefreshToken(), {
+      domain: "",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+    });
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    );
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
     return {
-      status: res.getStatusCode(),
-      message: res.getMessage(),
-      accessToken: res.getAccessToken(),
-      refreshToken: res.getRefreshToken(),
+      status: result.getStatusCode(),
+      message: result.getMessage(),
     };
   });
 };

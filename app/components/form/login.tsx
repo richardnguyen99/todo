@@ -27,6 +27,7 @@ const LoginForm: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<LoginInput> = async (data, e) => {
+    console.log(data);
     e?.preventDefault();
 
     try {
@@ -34,7 +35,6 @@ const LoginForm: React.FC = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
 
         body: JSON.stringify({
@@ -48,6 +48,7 @@ const LoginForm: React.FC = () => {
         }),
 
         keepalive: true,
+        credentials: "include",
       });
 
       const json = await res.json();
@@ -146,7 +147,8 @@ export default LoginForm;
 export const query = `#graphql
   mutation LoginMutation($input: LoginInput!) {
     login(input: $input) {
-       token,
+       accessToken,
+       refreshToken,
        message,
        status
     }
