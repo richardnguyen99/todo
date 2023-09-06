@@ -111,6 +111,59 @@ public class TokenService : ITokenService
         }
     }
 
+    public UserInfo? ValidateToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = _configuration.GetSection("Authentication:Secret").Value;
+
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        try
+        {
+            tokenHandler.ValidateToken(
+                token,
+                new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(key)
+                    ),
+                    ValidateIssuer = true,
+                    ValidIssuer = "https://auth:7135",
+                    ValidateAudience = true,
+                    ValidAudience = "https://gateway:4444",
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                },
+                out SecurityToken validatedToken
+            );
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            var userId = jwtToken.Claims.First(x =>
+                x.Type == ClaimTypes.Sid
+            ).Value;
+
+            return new UserInfo
+            {
+                Id = int.Parse(userId),
+                Email = jwtToken.Claims.First(x =>
+                    x.Type == ClaimTypes.Email
+                ).Value,
+                Username = jwtToken.Claims.First(x =>
+                    x.Type == ClaimTypes.Name
+                ).Value
+            };
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("{}.\nToken is invalid!", e.Message);
+            return null;
+        }
+    }
+
     private static JwtSecurityToken CreateJwtToken(
         List<Claim> claims,
         SigningCredentials credentials,

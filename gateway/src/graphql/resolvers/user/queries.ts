@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import type { QueryResolvers } from "@generated/resolvers-types";
 
 import mock from "../mock";
+import authService from "@services/auth";
+import { ValidateRequest, ValidateResponse } from "@/services/auth_pb";
 
 const getUser: QueryResolvers["getUser"] = async (
   _parent,
@@ -25,14 +27,37 @@ const getUser: QueryResolvers["getUser"] = async (
     "Origin, X-Requested-With, Content-Type, Accept"
   );
 
-  console.log(req.cookies);
+  if (!req.cookies["access_token"])
+    return {
+      id: "",
+      name: "",
+      email: "",
+    };
 
-  return {
-    id: "somthing",
-    name: "somthing",
-    email: "somthing",
-    password: "somthing",
-  };
+  const validateRequest = new ValidateRequest();
+  validateRequest.setAccessToken(req.cookies["access_token"]);
+
+  return new Promise<ValidateResponse>((resolve, reject) =>
+    authService.validate(validateRequest, (err, result) => {
+      if (err) reject(err);
+
+      resolve(result);
+    })
+  )
+    .then((result) => {
+      return {
+        id: result.getId(),
+        name: result.getName(),
+        email: result.getEmail(),
+      };
+    })
+    .catch((_err) => {
+      return {
+        id: "",
+        name: "",
+        email: "",
+      };
+    });
 };
 
 const user: QueryResolvers["user"] = async (

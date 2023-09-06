@@ -143,16 +143,46 @@ public class AuthService : Auth.AuthBase
         });
     }
 
-    public override Task<ValidateTokenResponse> ValidateToken(
-        ValidateTokenRequest request,
+    public override Task<ValidateResponse> Validate(
+        ValidateRequest request,
         ServerCallContext context)
     {
-        // var result = _tokenService.ValidateToken(request.Token);
+        string token = request.AccessToken;
 
-        return Task.FromResult(new ValidateTokenResponse
+        if (string.IsNullOrEmpty(token))
+        {
+            return Task.FromResult(new ValidateResponse
+            {
+                // Return 400 meaning that the request has not been applied
+                // because it lacks valid authentication credentials for the
+                // target resource.
+                Message = "Bad request",
+                StatusCode = 400
+            });
+        }
+
+        var result = _tokenService.ValidateToken(token);
+
+        if (result == null)
+        {
+            return Task.FromResult(new ValidateResponse
+            {
+                // Return 401 meaning that the request has not been applied
+                // because it lacks valid authentication credentials for the
+                // target resource.
+                Message = "Invalid token",
+                StatusCode = 401
+            });
+        }
+
+        return Task.FromResult(new ValidateResponse
         {
             Message = "message",
-            StatusCode = 200
+            StatusCode = 200,
+
+            Id = result.Id.ToString(),
+            Name = result.Username,
+            Email = result.Email
         });
     }
 }

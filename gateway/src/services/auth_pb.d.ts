@@ -106,3 +106,55 @@ export namespace RegisterResponse {
         statusCode: number,
     }
 }
+
+export class ValidateRequest extends jspb.Message { 
+    getAccessToken(): string;
+    setAccessToken(value: string): ValidateRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ValidateRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ValidateRequest): ValidateRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ValidateRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ValidateRequest;
+    static deserializeBinaryFromReader(message: ValidateRequest, reader: jspb.BinaryReader): ValidateRequest;
+}
+
+export namespace ValidateRequest {
+    export type AsObject = {
+        accessToken: string,
+    }
+}
+
+export class ValidateResponse extends jspb.Message { 
+    getMessage(): string;
+    setMessage(value: string): ValidateResponse;
+    getStatusCode(): number;
+    setStatusCode(value: number): ValidateResponse;
+    getId(): string;
+    setId(value: string): ValidateResponse;
+    getName(): string;
+    setName(value: string): ValidateResponse;
+    getEmail(): string;
+    setEmail(value: string): ValidateResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ValidateResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: ValidateResponse): ValidateResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ValidateResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ValidateResponse;
+    static deserializeBinaryFromReader(message: ValidateResponse, reader: jspb.BinaryReader): ValidateResponse;
+}
+
+export namespace ValidateResponse {
+    export type AsObject = {
+        message: string,
+        statusCode: number,
+        id: string,
+        name: string,
+        email: string,
+    }
+}

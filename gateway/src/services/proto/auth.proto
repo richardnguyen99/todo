@@ -3,6 +3,7 @@ syntax = "proto3";
 package auth;
 
 service Auth {
+    rpc Validate(ValidateRequest) returns (ValidateResponse) {}
     rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
 }
@@ -30,3 +31,15 @@ message RegisterResponse {
     int32 status_code = 2;
 }
 
+message ValidateRequest {
+    string access_token = 1;
+}
+
+message ValidateResponse {
+    string message = 1;
+    int32 status_code = 2;
+
+    string id = 3;
+    string name = 4;
+    string email = 5;
+}

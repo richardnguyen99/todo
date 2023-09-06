@@ -14,6 +14,8 @@ public interface ITokenService
     public string CreateAccessToken(UserInfo user, string sessionId, string ipAddress);
 
     public string CreateRefreshToken(UserInfo user, string sessionId, string ipAddress);
+
+    public UserInfo? ValidateToken(string token);
 };
 
 #endregion
