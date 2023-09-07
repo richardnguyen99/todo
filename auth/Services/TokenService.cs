@@ -159,7 +159,11 @@ public class TokenService : ITokenService
         }
         catch (Exception e)
         {
-            _logger.LogError("{}.\nToken is invalid!", e.Message);
+            _logger.LogCritical("{}", token);
+            _logger.LogError(
+                "Error: {}\n\tAt {}.\nToken is invalid!",
+                e.Message, e.StackTrace);
+
             return null;
         }
     }

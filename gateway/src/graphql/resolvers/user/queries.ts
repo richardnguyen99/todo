@@ -30,7 +30,7 @@ const getUser: QueryResolvers["getUser"] = async (
   if (!req.cookies["access_token"])
     return {
       id: "",
-      name: "",
+      name: "no access token",
       email: "",
     };
 
@@ -45,16 +45,18 @@ const getUser: QueryResolvers["getUser"] = async (
     })
   )
     .then((result) => {
-      return {
+      const response = {
         id: result.getId(),
         name: result.getName(),
         email: result.getEmail(),
       };
+
+      return response;
     })
     .catch((_err) => {
       return {
         id: "",
-        name: "",
+        name: "internal server error",
         email: "",
       };
     });
