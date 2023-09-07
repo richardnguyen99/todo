@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Input from "@components/input/input";
@@ -27,33 +28,15 @@ const LoginForm: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<LoginInput> = async (data, e) => {
-    console.log(data);
     e?.preventDefault();
 
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_API_GATEWAY_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          query,
-          variables: {
-            input: {
-              email: data.email,
-              password: data.password,
-            },
-          },
-        }),
-
-        keepalive: true,
-        credentials: "include",
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/",
       });
-
-      const json = await res.json();
-
-      console.log(json);
     } catch (err) {
       console.error(err);
     }
