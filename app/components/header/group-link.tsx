@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import HeaderLink from "./link";
 
@@ -24,7 +25,9 @@ const GroupLink: React.FC = () => {
       {data?.user && (
         <>
           <HeaderLink href="#">Profiles</HeaderLink>
-          <HeaderLink href="#">Logout</HeaderLink>
+          <HeaderLink href="#" onClick={() => signOut()}>
+            Logout
+          </HeaderLink>
         </>
       )}
     </>
