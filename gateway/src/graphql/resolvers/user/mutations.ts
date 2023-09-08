@@ -1,8 +1,15 @@
-import type { MutationResolvers } from "@generated/resolvers-types";
+import * as grpc from "@grpc/grpc-js";
+import { Request, Response } from "express";
 
+import type { MutationResolvers } from "@generated/resolvers-types";
 import services from "@graphql/resolvers/user/services";
 import authService from "@services/auth";
-import { RegisterRequest, RegisterResponse } from "@services/auth_pb";
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from "@services/auth_pb";
 
 const createUser: MutationResolvers["createUser"] = async (
   _parent,
@@ -52,11 +59,57 @@ const login: MutationResolvers["login"] = async (
 ) => {
   const { input } = _args;
 
-  return {
-    token: `token: ${input.email}`,
-    message: "message",
-    status: 200,
-  };
+  const loginRequest = new LoginRequest();
+  loginRequest.setEmail(input.email);
+  loginRequest.setPassword(input.password);
+
+  const req = _context.req as Request;
+  const res = _context.res as Response;
+  const metadata = new grpc.Metadata();
+
+  console.log(req.headers);
+
+  if (req.headers["origin"]) {
+    metadata.add("origin", req.headers["origin"] as string);
+  }
+
+  metadata.add(
+    "forwarded",
+    `for=${req.ip};by=todo-gateway;proto=${req.protocol}`
+  );
+
+  return new Promise<LoginResponse>((resolve, reject) =>
+    authService.login(loginRequest, metadata, (err, result) => {
+      console.log("sent");
+      if (err) {
+        reject(err);
+      }
+
+      resolve(result);
+    })
+  ).then((result) => {
+    // Add support headers for CORS policy
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    );
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+
+    return {
+      accessToken: result.getAccessToken(),
+      refreshToken: result.getRefreshToken(),
+      id: result.getId(),
+      username: result.getUsername(),
+      email: result.getEmail(),
+      status: result.getStatusCode(),
+      message: result.getMessage(),
+    };
+  });
 };
 
 const register: MutationResolvers["register"] = async (

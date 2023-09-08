@@ -1,10 +1,10 @@
 import * as React from "react";
 import clsx from "classnames";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 import Form from "@components/form";
 
-const LoginPage: NextPage = () => {
+const LoginPage: NextPage = async () => {
   return (
     <main>
       <section

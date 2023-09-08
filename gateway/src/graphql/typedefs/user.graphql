@@ -46,12 +46,15 @@ input LoginInput {
 type LoginPayload {
   accessToken: String
   refreshToken: String
+  id: String
+  username: String
+  email: String
   message: String!
   status: Int!
 }
 
 input RegisterInput {
-  username: String
+  username: String!
   email: String!
   password: String!
 }

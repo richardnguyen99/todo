@@ -42,11 +42,7 @@ public class AuthRepository : IAuthRepository
     {
         var result = await _context.UserInfos
             .Where(x => x.Email == request.Email)
-            .Select(u => new UserInfo
-            {
-                Email = u.Email,
-                Password = u.Password
-            }).FirstOrDefaultAsync();
+            .Select(u => u).FirstOrDefaultAsync();
 
         if (result == null)
         {

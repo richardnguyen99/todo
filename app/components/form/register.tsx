@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import clsx from "classnames";
-import { FormSubmitHandler, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import zxcvbn from "zxcvbn";
 import { CheckIcon, XIcon } from "@primer/octicons-react";
 

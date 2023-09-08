@@ -1,9 +1,15 @@
 import * as React from "react";
 import clsx from "classnames";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
 
 import Form from "@components/form";
-const Home: React.FC = () => {
+import authOptions from "@lib/auth";
+
+const Home = async () => {
+  const session = await getServerSession(authOptions);
+  console.log(session);
+
   return (
     <main>
       <section
