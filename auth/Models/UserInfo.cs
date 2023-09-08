@@ -18,5 +18,5 @@ public partial class UserInfo
 
     public string? LastName { get; set; }
 
-    public bool? Gender { get; set; }
+    public string? Gender { get; set; }
 }

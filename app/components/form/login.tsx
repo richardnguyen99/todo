@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Input from "@components/input/input";
@@ -13,11 +15,19 @@ type LoginInput = {
 };
 
 const LoginForm: React.FC = () => {
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
+    setValue,
   } = useForm<LoginInput>({
     mode: "onBlur",
     defaultValues: {
@@ -27,33 +37,29 @@ const LoginForm: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<LoginInput> = async (data, e) => {
-    console.log(data);
     e?.preventDefault();
 
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_API_GATEWAY_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      setLoading(true);
+      setError("");
+      setValue("email", "");
+      setValue("password", "");
 
-        body: JSON.stringify({
-          query,
-          variables: {
-            input: {
-              email: data.email,
-              password: data.password,
-            },
-          },
-        }),
-
-        keepalive: true,
-        credentials: "include",
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        callbackUrl: callbackUrl,
       });
 
-      const json = await res.json();
+      setLoading(false);
 
-      console.log(json);
+      console.log(res);
+      if (!res?.error) {
+        router.push(callbackUrl);
+      } else {
+        setError("invalid email or password");
+      }
     } catch (err) {
       console.error(err);
     }

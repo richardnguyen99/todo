@@ -46,6 +46,9 @@ input LoginInput {
 type LoginPayload {
   accessToken: String
   refreshToken: String
+  id: String
+  username: String
+  email: String
   message: String!
   status: Int!
 }

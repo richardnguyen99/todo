@@ -1,6 +1,6 @@
 import * as React from "react";
 import clsx from "classnames";
-import { NextPage, GetServerSideProps } from "next";
+import type { NextPage } from "next";
 
 import Form from "@components/form";
 

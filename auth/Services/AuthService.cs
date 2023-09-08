@@ -51,6 +51,9 @@ public class AuthService : Auth.AuthBase
                 // Bad request from the gateway.
                 AccessToken = string.Empty,
                 RefreshToken = string.Empty,
+                Id = string.Empty,
+                Username = string.Empty,
+                Email = string.Empty,
                 Message = "Bad request",
                 StatusCode = 400
             });
@@ -69,6 +72,9 @@ public class AuthService : Auth.AuthBase
                 // target resource.
                 AccessToken = string.Empty,
                 RefreshToken = string.Empty,
+                Id = string.Empty,
+                Username = string.Empty,
+                Email = string.Empty,
                 Message = "Invalid credentials",
                 StatusCode = 401
             });
@@ -90,6 +96,9 @@ public class AuthService : Auth.AuthBase
         {
             AccessToken = tokens[0],
             RefreshToken = tokens[1],
+            Id = result.Result.Id.ToString(),
+            Username = result.Result.Username,
+            Email = result.Result.Email,
             Message = "Login successful",
             StatusCode = 200
         });

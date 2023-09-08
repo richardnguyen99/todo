@@ -88,27 +88,6 @@ const login: MutationResolvers["login"] = async (
       resolve(result);
     })
   ).then((result) => {
-    res.cookie("access_token", result.getAccessToken(), {
-      domain: "",
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    });
-
-    res.cookie("refresh_token", result.getRefreshToken(), {
-      domain: "",
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    });
-
-    res.cookie("user_logged_in", "yes", {
-      domain: "",
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    });
-
     // Add support headers for CORS policy
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
@@ -122,6 +101,11 @@ const login: MutationResolvers["login"] = async (
     );
 
     return {
+      accessToken: result.getAccessToken(),
+      refreshToken: result.getRefreshToken(),
+      id: result.getId(),
+      username: result.getUsername(),
+      email: result.getEmail(),
       status: result.getStatusCode(),
       message: result.getMessage(),
     };
