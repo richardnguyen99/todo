@@ -2,6 +2,7 @@ import * as React from "react";
 import clsx from "classnames";
 import { MarkGithubIcon } from "@primer/octicons-react";
 import HeaderLink from "./link";
+import GroupLink from "./group-link";
 
 const Header: React.FC = () => {
   return (
@@ -33,8 +34,7 @@ const Header: React.FC = () => {
 
         <div className="flex items-center text-lg">
           <div className="flex gap-4">
-            <HeaderLink href="/login">Login</HeaderLink>
-            <HeaderLink href="/register">Register</HeaderLink>
+            <GroupLink />
           </div>
 
           <div

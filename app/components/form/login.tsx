@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -14,11 +15,19 @@ type LoginInput = {
 };
 
 const LoginForm: React.FC = () => {
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
+    setValue,
   } = useForm<LoginInput>({
     mode: "onBlur",
     defaultValues: {
@@ -31,12 +40,26 @@ const LoginForm: React.FC = () => {
     e?.preventDefault();
 
     try {
+      setLoading(true);
+      setError("");
+      setValue("email", "");
+      setValue("password", "");
+
       const res = await signIn("credentials", {
         redirect: false,
         email: data.email,
         password: data.password,
-        callbackUrl: "/",
+        callbackUrl: callbackUrl,
       });
+
+      setLoading(false);
+
+      console.log(res);
+      if (!res?.error) {
+        router.push(callbackUrl);
+      } else {
+        setError("invalid email or password");
+      }
     } catch (err) {
       console.error(err);
     }
