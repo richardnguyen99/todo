@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -30,6 +29,9 @@ const options: NextAuthOptions = {
                 login(input: $input) {
                   accessToken
                   refreshToken
+                  id
+                  username
+                  email
                   message
                   status
                 }
@@ -54,31 +56,43 @@ const options: NextAuthOptions = {
         }
 
         return {
-          id: "23",
-          name: "Tom Riddle",
-          email: "triddle@hogwarts.com",
-          access_token: data.login.accessToken,
-          refresh_token: data.login.refreshToken,
+          id: data.login.id,
+          email: data.login.email,
+          username: data.login.username,
+          accessToken: data.login.accessToken,
+          refreshToken: data.login.refreshToken,
         };
       },
     }),
   ],
   callbacks: {
+    // Pass User Info to JWT and Session. Content of Jwt callback can be passed
+    // to Session callback. The rest will remain hidden from the client.
     jwt: async ({ token, user }) => {
       if (user) {
         token.accessToken = (user as any).accessToken;
-        // @ts-ignore
         token.refershToken = (user as any).refreshToken;
+        token.id = (user as any).id;
+        token.email = (user as any).email;
+        token.username = (user as any).username;
       }
 
       return token;
     },
 
-    session: async ({ session, token }) => {
-      (session as any).accessToken = token.accessToken;
-      (session as any).refreshToken = token.refreshToken;
+    // Pass User Info to session so that Next components can access it.
+    // Server components can access through getServerSession(auth).
+    // Client components can access through useSession().
+    // https://next-auth.js.org/getting-started/client#usesession
+    session: async ({ session, token, user }) => {
+      (session as any).user.accessToken = token.accessToken;
+      (session as any).user.id = token.id;
+      (session as any).user.username = token.username;
 
-      return session;
+      return {
+        ...session,
+        ...user,
+      };
     },
   },
 };

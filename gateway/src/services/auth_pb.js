@@ -347,8 +347,11 @@ proto.auth.LoginResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     accessToken: jspb.Message.getFieldWithDefault(msg, 1, ""),
     refreshToken: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    message: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    statusCode: jspb.Message.getFieldWithDefault(msg, 4, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    username: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    email: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    message: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    statusCode: jspb.Message.getFieldWithDefault(msg, 7, 0)
   };
 
   if (includeInstance) {
@@ -395,9 +398,21 @@ proto.auth.LoginResponse.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.setMessage(value);
+      msg.setId(value);
       break;
     case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUsername(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setEmail(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setMessage(value);
+      break;
+    case 7:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setStatusCode(value);
       break;
@@ -444,17 +459,38 @@ proto.auth.LoginResponse.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getMessage();
+  f = message.getId();
   if (f.length > 0) {
     writer.writeString(
       3,
       f
     );
   }
+  f = message.getUsername();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getEmail();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
+  f = message.getMessage();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
+    );
+  }
   f = message.getStatusCode();
   if (f !== 0) {
     writer.writeInt32(
-      4,
+      7,
       f
     );
   }
@@ -498,10 +534,10 @@ proto.auth.LoginResponse.prototype.setRefreshToken = function(value) {
 
 
 /**
- * optional string message = 3;
+ * optional string id = 3;
  * @return {string}
  */
-proto.auth.LoginResponse.prototype.getMessage = function() {
+proto.auth.LoginResponse.prototype.getId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
@@ -510,17 +546,71 @@ proto.auth.LoginResponse.prototype.getMessage = function() {
  * @param {string} value
  * @return {!proto.auth.LoginResponse} returns this
  */
-proto.auth.LoginResponse.prototype.setMessage = function(value) {
+proto.auth.LoginResponse.prototype.setId = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * optional int32 status_code = 4;
+ * optional string username = 4;
+ * @return {string}
+ */
+proto.auth.LoginResponse.prototype.getUsername = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.auth.LoginResponse} returns this
+ */
+proto.auth.LoginResponse.prototype.setUsername = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string email = 5;
+ * @return {string}
+ */
+proto.auth.LoginResponse.prototype.getEmail = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.auth.LoginResponse} returns this
+ */
+proto.auth.LoginResponse.prototype.setEmail = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional string message = 6;
+ * @return {string}
+ */
+proto.auth.LoginResponse.prototype.getMessage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.auth.LoginResponse} returns this
+ */
+proto.auth.LoginResponse.prototype.setMessage = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional int32 status_code = 7;
  * @return {number}
  */
 proto.auth.LoginResponse.prototype.getStatusCode = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
@@ -529,7 +619,7 @@ proto.auth.LoginResponse.prototype.getStatusCode = function() {
  * @return {!proto.auth.LoginResponse} returns this
  */
 proto.auth.LoginResponse.prototype.setStatusCode = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 7, value);
 };
 
 

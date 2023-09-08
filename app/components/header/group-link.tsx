@@ -1,21 +1,32 @@
-import * as React from "react";
-import { getServerSession } from "next-auth";
+"use client";
 
-import auth from "@lib/auth";
+import * as React from "react";
+import { useSession } from "next-auth/react";
+
 import HeaderLink from "./link";
 
-const GroupLink: React.FC = async () => {
-  const session = await getServerSession(auth);
+const GroupLink: React.FC = () => {
+  const { data, status } = useSession();
 
-  return session?.user ? (
+  React.useEffect(() => {}, [status, data]);
+
+  if (status === "loading") return <></>;
+
+  return (
     <>
-      <HeaderLink href="#">Profiles</HeaderLink>
-      <HeaderLink href="#">Logout</HeaderLink>
-    </>
-  ) : (
-    <>
-      <HeaderLink href="/login">Login</HeaderLink>
-      <HeaderLink href="/register">Register</HeaderLink>
+      {!data?.user && (
+        <>
+          <HeaderLink href="/login">Login</HeaderLink>
+          <HeaderLink href="/register">Register</HeaderLink>
+        </>
+      )}
+
+      {data?.user && (
+        <>
+          <HeaderLink href="#">Profiles</HeaderLink>
+          <HeaderLink href="#">Logout</HeaderLink>
+        </>
+      )}
     </>
   );
 };

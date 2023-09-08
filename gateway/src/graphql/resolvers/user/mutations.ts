@@ -103,6 +103,9 @@ const login: MutationResolvers["login"] = async (
     return {
       accessToken: result.getAccessToken(),
       refreshToken: result.getRefreshToken(),
+      id: result.getId(),
+      username: result.getUsername(),
+      email: result.getEmail(),
       status: result.getStatusCode(),
       message: result.getMessage(),
     };
