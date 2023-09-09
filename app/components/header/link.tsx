@@ -16,8 +16,9 @@ const HeaderLink: React.FC<Props> = ({
     <Link
       {...props}
       className={clsx("", {
-        "text-neutral-600 hover:text-neutral-950": true,
-        "transition-colors duration-300 ease-in": true,
+        "px-2 py-1": true,
+        "rounded-md": true,
+        "hover:bg-indigo-600/75": true,
       })}
     >
       {children}

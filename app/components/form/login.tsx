@@ -20,12 +20,11 @@ const LoginForm: React.FC = () => {
   const [error, setError] = React.useState("");
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/app";
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
     setValue,
   } = useForm<LoginInput>({

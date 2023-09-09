@@ -10,31 +10,30 @@ const Header: React.FC = () => {
     <header
       aria-description="header"
       className={clsx("", {
-        "fixed w-full bg-white z-50": true,
-        "shadow-lg drop-shadow-lg shadow-slate-300": true,
+        "top-0 left-0 right-0 h-12": true,
+        "fixed w-full z-50": true,
+        "bg-indigo-500 text-white": true,
       })}
     >
       <div
         aria-description="header-wrapper"
-        className={clsx("", {
+        className={clsx("h-full", {
           "flex items-center justify-between": true,
-          "w-full md:w-[768px] lg:w-[1024px] mx-auto py-4": true,
+          "w-full md:w-[768px] lg:w-[1024px] mx-auto py-2": true,
         })}
       >
         {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
         <h1
           aria-description="header-label"
-          className={clsx("font-mono", {
-            "text-2xl font-bold": true,
-            "md:text-3xl": true,
-            "lg:font-extrabold": true,
+          className={clsx("uppercase", {
+            "text-lg font-bold": true,
           })}
         >
           <HeaderLink href="/">Todo</HeaderLink>
         </h1>
 
-        <div className="flex items-center text-lg">
-          <div className="flex gap-4">
+        <div className="flex items-center text-sm">
+          <div className="flex gap-4 ">
             <GroupLink />
           </div>
 
@@ -43,9 +42,12 @@ const Header: React.FC = () => {
               "ml-4 pl-4 border-l border-slate-300": true,
             })}
           >
-            <HeaderLink href="https://github.com/richardnguyen99/todo">
-              <MarkGithubIcon size={24} />
-            </HeaderLink>
+            <a
+              href="https://github.com/richardnguyen99/todo"
+              className="px-1.5 py-1.5 hover:bg-indigo-600/75 rounded-md"
+            >
+              <MarkGithubIcon size={16} className="!block" />
+            </a>
           </div>
         </div>
       </div>

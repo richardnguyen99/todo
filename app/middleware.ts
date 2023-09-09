@@ -4,8 +4,6 @@ import { withAuth } from "next-auth/middleware";
 const middleware: NextMiddleware = async (req) => {
   const response = NextResponse.next();
 
-  console.log(response);
-
   return response;
 };
 
