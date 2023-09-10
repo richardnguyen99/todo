@@ -20,37 +20,40 @@ const AppEditableDescription: React.FC<Props> = ({
 }) => {
   const appEditorContext = useAppQuickEditorContext();
 
-  const [description, setDescription] =
-    React.useState<string>(initialDescription);
-
-  const handleDescriptionChange: React.FormEventHandler<HTMLParagraphElement> =
-    React.useCallback((e) => {
-      e.preventDefault();
-
-      const newDescription = e.currentTarget.textContent || "";
-      setDescription(newDescription);
-    }, []);
+  const setAppContextDescription = React.useCallback(
+    (newDescription: string) => {
+      appEditorContext.dispatch({
+        type: "SET_DESCRIPTION",
+        payload: {
+          newDescription,
+        },
+      });
+    },
+    [appEditorContext]
+  );
 
   const handleBlur: React.FocusEventHandler<HTMLParagraphElement> =
     React.useCallback(
       (e) => {
         e.preventDefault();
 
-        appEditorContext.handleDescriptionChange(description);
+        setAppContextDescription(
+          e.currentTarget.textContent ?? initialDescription
+        );
       },
-      [appEditorContext, description]
+      [initialDescription, setAppContextDescription]
     );
 
   // Load initial description to editor context
   React.useEffect(() => {
-    appEditorContext.handleDescriptionChange(description);
+    setAppContextDescription(initialDescription);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <p
       contentEditable
-      onChange={handleDescriptionChange}
+      suppressContentEditableWarning
       onBlur={handleBlur}
       className={twMerge(
         clsx("", {
@@ -59,7 +62,7 @@ const AppEditableDescription: React.FC<Props> = ({
         _className
       )}
     >
-      {description}
+      {initialDescription}
     </p>
   );
 };

@@ -4,15 +4,13 @@ import * as React from "react";
 import clsx from "classnames";
 
 import { useAppContext } from "../../context";
-import {
-  CheckIcon,
-  MilestoneIcon,
-  StopwatchIcon,
-  TagIcon,
-} from "@primer/octicons-react";
 import AppEditableContent from "./editable-content";
 import AppEditableDescription from "./editable-description";
 import AppDueDateButton from "./option-due-button";
+import AppPriorityButton from "./option-priority-button";
+import AppLabelButton from "./option-label-button";
+import AppReminderButton from "./option-reminder-button";
+import SaveButton from "./save-button";
 
 const AppQuickEditor: React.FC = () => {
   const appContext = useAppContext();
@@ -36,34 +34,11 @@ const AppQuickEditor: React.FC = () => {
         })}
       >
         <AppDueDateButton />
-        <button
-          type="button"
-          className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-slate-100"
-        >
-          <MilestoneIcon size={16} />
-          <p>Priorities</p>
-        </button>
-        <button
-          type="button"
-          className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-slate-100"
-        >
-          <StopwatchIcon size={16} />
-          <p>Reminders</p>
-        </button>
-        <button
-          type="button"
-          className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-slate-100"
-        >
-          <TagIcon size={16} />
-          <p>Labels</p>
-        </button>
-        <button
-          type="button"
-          className="flex items-center gap-2 px-2 py-1 ml-auto rounded-md bg-green-500 hover:bg-green-600 border border-emerald-500 text-white font-semibold"
-        >
-          <CheckIcon size={16} />
-          <p>Save</p>
-        </button>
+        <AppPriorityButton />
+        <AppReminderButton />
+        <AppLabelButton />
+
+        <SaveButton />
       </div>
     </div>
   ) : (

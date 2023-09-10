@@ -15,27 +15,31 @@ const AppEditableContent: React.FC<Props> = ({ initialContent, ...rest }) => {
   const [content, setContent] = React.useState<string>(initialContent);
   const appEditorContext = useAppQuickEditorContext();
 
-  const handleContentChange: React.FormEventHandler<HTMLHeadElement> =
-    React.useCallback((e) => {
-      e.preventDefault();
-
-      const newContent = e.currentTarget.textContent || "";
-      setContent(newContent);
-    }, []);
+  const setAppContextContent = React.useCallback(
+    (newContent: string) => {
+      appEditorContext.dispatch({
+        type: "SET_CONTENT",
+        payload: {
+          newContent,
+        },
+      });
+    },
+    [appEditorContext]
+  );
 
   const handleBlur: React.FocusEventHandler<HTMLHeadElement> =
     React.useCallback(
       (e) => {
         e.preventDefault();
 
-        appEditorContext.handleContentChange(content);
+        setAppContextContent(e.currentTarget.textContent ?? initialContent);
       },
-      [appEditorContext, content]
+      [initialContent, setAppContextContent]
     );
 
   // Load initial description to editor context
   React.useEffect(() => {
-    appEditorContext.handleContentChange(content);
+    setAppContextContent(initialContent);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -43,7 +47,7 @@ const AppEditableContent: React.FC<Props> = ({ initialContent, ...rest }) => {
     <h3
       {...rest}
       contentEditable
-      onChange={handleContentChange}
+      suppressContentEditableWarning={true}
       onBlur={handleBlur}
       className={clsx("", {
         "text-base font-semibold": true,
