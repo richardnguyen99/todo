@@ -7,6 +7,8 @@ import {
 } from "@primer/octicons-react";
 import * as React from "react";
 import AppTask from "./components/app-task";
+import AppMainButton from "./components/app-main-button";
+import AppQuickEditor from "./components/app-quick-editor";
 
 const AuthApp = () => {
   return (
@@ -41,6 +43,8 @@ const AuthApp = () => {
         <AppTask content="Test" description="Some test" />
         <AppTask content="Test" description="Some test" />
         <AppTask content="Test" description="Some test" />
+        <AppQuickEditor />
+        <AppMainButton />
       </div>
     </div>
   );
