@@ -7,11 +7,12 @@ import { useAppContext } from "../../context";
 import {
   CheckIcon,
   MilestoneIcon,
-  MultiSelectIcon,
   PivotColumnIcon,
   StopwatchIcon,
   TagIcon,
 } from "@primer/octicons-react";
+import { useAppQuickEditorContext } from "./context";
+import AppEditableContent from "./editable-content";
 
 const AppQuickEditor: React.FC = () => {
   const appContext = useAppContext();
@@ -25,7 +26,7 @@ const AppQuickEditor: React.FC = () => {
       })}
     >
       <div className="mb-4">
-        <h3 className="text-base font-semibold">Content</h3>
+        <AppEditableContent initialContent="Task" />
         <p className="text-slate-400 mt-2">Description</p>
       </div>
       <div

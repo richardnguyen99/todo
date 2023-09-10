@@ -9,6 +9,7 @@ import * as React from "react";
 import AppTask from "./components/app-task";
 import AppMainButton from "./components/app-main-button";
 import AppQuickEditor from "./components/app-quick-editor";
+import AppQuickEditorProvider from "./components/app-quick-editor/context";
 
 const AuthApp = () => {
   return (
@@ -43,7 +44,10 @@ const AuthApp = () => {
         <AppTask content="Test" description="Some test" />
         <AppTask content="Test" description="Some test" />
         <AppTask content="Test" description="Some test" />
-        <AppQuickEditor />
+
+        <AppQuickEditorProvider>
+          <AppQuickEditor />
+        </AppQuickEditorProvider>
         <AppMainButton />
       </div>
     </div>
