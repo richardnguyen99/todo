@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import clsx from "classnames";
+import { twMerge } from "tailwind-merge";
 
 import { useAppQuickEditorContext } from "./context";
 
@@ -12,7 +13,11 @@ export interface AppEditableDescriptionProps {
 type Props = React.HTMLAttributes<HTMLParagraphElement> &
   AppEditableDescriptionProps;
 
-const AppEditableDescription: React.FC<Props> = ({ initialDescription }) => {
+const AppEditableDescription: React.FC<Props> = ({
+  initialDescription,
+  className: _className,
+  ...rest
+}) => {
   const appEditorContext = useAppQuickEditorContext();
 
   const [description, setDescription] =
@@ -47,9 +52,12 @@ const AppEditableDescription: React.FC<Props> = ({ initialDescription }) => {
       contentEditable
       onChange={handleDescriptionChange}
       onBlur={handleBlur}
-      className={clsx("", {
-        "text-sm font-normal text-slate-600": true,
-      })}
+      className={twMerge(
+        clsx("", {
+          "text-sm font-normal text-slate-600": true,
+        }),
+        _className
+      )}
     >
       {description}
     </p>

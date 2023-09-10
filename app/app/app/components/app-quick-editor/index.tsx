@@ -7,12 +7,12 @@ import { useAppContext } from "../../context";
 import {
   CheckIcon,
   MilestoneIcon,
-  PivotColumnIcon,
   StopwatchIcon,
   TagIcon,
 } from "@primer/octicons-react";
 import AppEditableContent from "./editable-content";
 import AppEditableDescription from "./editable-description";
+import AppDueDateButton from "./option-due-button";
 
 const AppQuickEditor: React.FC = () => {
   const appContext = useAppContext();
@@ -35,13 +35,7 @@ const AppQuickEditor: React.FC = () => {
           "gap-3": true,
         })}
       >
-        <button
-          type="button"
-          className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-slate-100 "
-        >
-          <PivotColumnIcon size={16} />
-          <p>Due dates</p>
-        </button>
+        <AppDueDateButton />
         <button
           type="button"
           className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-slate-100"
