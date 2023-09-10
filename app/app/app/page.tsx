@@ -1,11 +1,12 @@
 "use client";
 
+import * as React from "react";
 import {
   KebabHorizontalIcon,
   MultiSelectIcon,
   ProjectIcon,
 } from "@primer/octicons-react";
-import * as React from "react";
+
 import AppTask from "./components/app-task";
 import AppMainButton from "./components/app-main-button";
 import AppQuickEditor from "./components/app-quick-editor";

@@ -11,8 +11,8 @@ import {
   StopwatchIcon,
   TagIcon,
 } from "@primer/octicons-react";
-import { useAppQuickEditorContext } from "./context";
 import AppEditableContent from "./editable-content";
+import AppEditableDescription from "./editable-description";
 
 const AppQuickEditor: React.FC = () => {
   const appContext = useAppContext();
@@ -25,9 +25,9 @@ const AppQuickEditor: React.FC = () => {
         "text-sm": true,
       })}
     >
-      <div className="mb-4">
+      <div className="mb-4 flex flex-col gap-2">
         <AppEditableContent initialContent="Task" />
-        <p className="text-slate-400 mt-2">Description</p>
+        <AppEditableDescription initialDescription="Description" />
       </div>
       <div
         className={clsx("", {

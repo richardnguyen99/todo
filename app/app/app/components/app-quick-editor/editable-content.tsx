@@ -33,6 +33,12 @@ const AppEditableContent: React.FC<Props> = ({ initialContent, ...rest }) => {
       [appEditorContext, content]
     );
 
+  // Load initial description to editor context
+  React.useEffect(() => {
+    appEditorContext.handleContentChange(content);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <h3
       {...rest}
