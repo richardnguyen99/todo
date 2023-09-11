@@ -19,7 +19,7 @@ const Header: React.FC = () => {
         aria-description="header-wrapper"
         className={clsx("h-full", {
           "flex items-center justify-between": true,
-          "w-full md:w-[768px] lg:w-[1024px] mx-auto py-2": true,
+          "w-full md:w-[768px] mx-auto py-2": true,
         })}
       >
         {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
