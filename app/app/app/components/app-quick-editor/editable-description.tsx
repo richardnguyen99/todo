@@ -58,6 +58,9 @@ const AppEditableDescription: React.FC<Props> = ({
       className={twMerge(
         clsx("", {
           "text-sm font-normal text-slate-600": true,
+          "outline-none rounded-md": true,
+          "p-1 border border-transparent": true,
+          "focus-visible:border-slate-400 focus-visible:border": true,
         }),
         _className
       )}

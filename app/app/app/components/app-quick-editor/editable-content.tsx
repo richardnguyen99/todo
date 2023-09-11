@@ -51,6 +51,9 @@ const AppEditableContent: React.FC<Props> = ({ initialContent, ...rest }) => {
       onBlur={handleBlur}
       className={clsx("", {
         "text-base font-semibold": true,
+        "outline-none rounded-md": true,
+        "px-1 py-1.5 border border-transparent": true,
+        "focus-visible:border-slate-400": true,
       })}
     >
       {content}
